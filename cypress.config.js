@@ -20,6 +20,10 @@ export default defineConfig({
       reporter(on);
       return config;
     },
+    retries: {
+      runMode: 1,
+      openMode: 0
+    },
     specPattern: "cypress/e2e/**/*.cy.ts",
     screenshotOnRunFailure: true,
     video: false
