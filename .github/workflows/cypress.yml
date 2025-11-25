@@ -1,5 +1,27 @@
 name: Cypress Tests
-on: [push]
+on: 
+  push:
+  workflow_dispatch:
+    inputs:
+      spec:
+        description: 'Spec file to run (leave empty to run all tests)'
+        required: false
+        type: choice
+        options:
+          - 'All Tests'
+          - 'cypress/e2e/Test1.cy.ts'
+          - 'cypress/e2e/Test2.cy.ts'
+          - 'cypress/e2e/practiceE2E.cy.ts'
+        default: 'All Tests'
+      browser:
+        description: 'Browser to use'
+        required: false
+        type: choice
+        options:
+          - 'chrome'
+          - 'firefox'
+          - 'edge'
+        default: 'chrome'
 
 permissions:
   contents: write
@@ -24,7 +46,8 @@ jobs:
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome
+          browser: ${{ github.event.inputs.browser || 'chrome' }}
+          spec: ${{ github.event.inputs.spec != 'All Tests' && github.event.inputs.spec || '' }}
           install: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
