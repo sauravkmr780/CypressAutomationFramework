@@ -1,0 +1,22 @@
+{
+  "name": "cypressautomation",
+  "version": "1.0.0",
+  "description": "Cypress Automation Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:report": "cypress run && node cypress/reports/html/index.html"
+  },
+  "keywords": [],
+  "author": "Saurav Kumar",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "cypress": "^15.6.0",
+    "cypress-iframe": "^1.0.1",
+    "cypress-mochawesome-reporter": "^4.0.2",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,22 @@
+{
+    "username": "#username",
+    "password": "#password",
+    "roleDropdown": "select",
+    "termsCheckbox": "#terms",
+    "signInBtn": "#signInBtn",
+    "productCard": "[class*='card']",
+    "productName": ".card-title a",
+    "productButton": ".card-footer button",
+    "checkoutButton": "[class*='nav-link']",
+    "cartTable": "table.table.table-hover tbody",
+    "cartPrice": "table.table.table-hover tbody td:nth-child(4) strong",
+    "totalAmount": "h3 strong",
+    "cartProducts": ".card-title",
+    "cartCheckoutButton": "button[class='btn btn-success']",
+    "countryInput": "#country",
+    "countryDropdown": ".suggestions ul li a",
+    "agreementCheckbox": "#checkbox2",
+    "checkbox": ".checkbox",
+    "submitButton": "input[type='submit']",
+    "successMessage": ".alert-success"
+}

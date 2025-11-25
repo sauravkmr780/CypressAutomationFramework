@@ -1,0 +1,14 @@
+{
+  "username": "rahulshettyacademy",
+  "password": "learning",
+  "role": "Teacher",
+  "roleValue": "teach",
+  "products": [
+    "Blackberry",
+    "iphone X"
+  ],
+  "country": "Ind",
+  "countryName": "India",
+  "purchaseButton": "Purchase",
+  "successMessage": "Success! Thank you!"
+}
