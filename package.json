@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:report": "cypress run && node cypress/reports/html/index.html"
+    "cypress:report": "cypress run && node cypress/reports/html/index.html",
+    "smokeTest": "cypress run --spec 'cypress/e2e/practiceE2E.cy.ts'"
   },
   "keywords": [],
   "author": "Saurav Kumar",
