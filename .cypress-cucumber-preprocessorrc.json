@@ -1,0 +1,13 @@
+{
+  "stepDefinitions": [
+    "cypress/e2e/BDD/**/*.ts"
+  ],
+  "messages": {
+    "enabled": false
+  },
+  "json": {
+    "enabled": false
+  },
+  "filterSpecs": true,
+  "omitFiltered": true
+}

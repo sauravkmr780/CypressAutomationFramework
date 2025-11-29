@@ -19,3 +19,17 @@ import './commands'
 
 // Import cypress-mochawesome-reporter for test reporting
 import 'cypress-mochawesome-reporter/register'
+
+// Import Allure reporter
+import '@mmisty/cypress-allure-adapter/support';
+
+// Tag-based test filtering
+beforeEach(function () {
+  const grep = Cypress.env('grep')
+  if (grep) {
+    const testTitle = this.currentTest?.title
+    if (testTitle && !testTitle.includes(grep)) {
+      this.skip()
+    }
+  }
+})

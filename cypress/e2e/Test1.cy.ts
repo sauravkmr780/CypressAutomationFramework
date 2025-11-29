@@ -6,7 +6,7 @@ describe('My First Test Suite', () => {
         cy.visit('https://rahulshettyacademy.com/seleniumPractise/#/')
     })
 
-    it('My First Test Case', () => {
+    it('@smoke My First Test Case', () => {
         cy.wait('@productAPI').then(({ response }) => {
             if (response) {
                 expect(response.statusCode).to.equal(200)
@@ -44,7 +44,7 @@ describe('My First Test Suite', () => {
         cy.get(selectors.brandLogo).should('have.text', 'GREENKART')
     })
 
-    it('My Sixth Test Case', () => { 
+    it('@smoke My Sixth Test Case', () => { 
         cy.get(selectors.searchInput).type('Berry')
         cy.contains(selectors.productName, 'Strawberry')
             .parents('.product')

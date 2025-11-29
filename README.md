@@ -1,46 +1,90 @@
-# Cypress Automation Framework
+# 🚀 Cypress Automation Framework
 
 [![Cypress Tests](https://github.com/sauravkmr780/CypressAutomationFramework/workflows/Cypress%20Tests/badge.svg)](https://github.com/sauravkmr780/CypressAutomationFramework/actions)
 [![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)](https://www.cypress.io/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![BDD](https://img.shields.io/badge/BDD-Cucumber-green.svg)](https://cucumber.io/)
+[![Allure](https://img.shields.io/badge/Allure-Report-yellow.svg)](http://allure.qatools.ru/)
 
-> A comprehensive end-to-end testing framework built with Cypress, TypeScript, and modern best practices including Page Object Model, custom commands, and CI/CD integration.
+> A production-ready end-to-end testing framework featuring **TDD + BDD** support, **triple reporting** (Mochawesome + Cucumber HTML + Allure), tag-based test execution, TypeScript, Page Object Model, custom commands, and comprehensive CI/CD integration.
 
 ---
 
 ## 📋 Table of Contents
 
 - [Features](#-features)
+- [Quick Start](#-quick-start)
 - [Project Structure](#-project-structure)
-- [Prerequisites](#-prerequisites)
 - [Installation](#-installation)
-- [Running Tests](#-running-tests)
+- [Test Execution](#-test-execution)
+  - [TDD Tests](#tdd-tests-traditional-cypress)
+  - [BDD Tests](#bdd-tests-cucumber-gherkin)
+  - [Tag-Based Execution](#tag-based-execution)
 - [Test Suites](#-test-suites)
-- [Reports](#-reports)
-- [CI/CD Integration](#-cicd-integration)
-- [Configuration](#-configuration)
+- [Reporting](#-reporting)
+  - [Mochawesome Reports (TDD)](#mochawesome-reports-tdd)
+  - [Cucumber HTML Reports (BDD)](#cucumber-html-reports-bdd)
+  - [Allure Reports (Unified TDD+BDD)](#allure-reports-unified-tddbdd)
 - [Custom Commands](#-custom-commands)
 - [Page Object Model](#-page-object-model)
+- [CI/CD Integration](#-cicd-integration)
+- [Configuration](#-configuration)
 - [Best Practices](#-best-practices)
 - [Troubleshooting](#-troubleshooting)
-- [Contributing](#-contributing)
 - [Author](#-author)
 
 ---
 
 ## ✨ Features
 
+### 🎯 Testing Capabilities
+- ✅ **Dual Testing Approach** - Support for both TDD (.cy.ts) and BDD (.feature) test styles
 - ✅ **TypeScript Support** - Full TypeScript integration for type safety and better IDE support
+- ✅ **BDD with Cucumber** - Gherkin syntax with step definitions for behavior-driven development
+- ✅ **Tag-Based Execution** - Run specific test subsets using @smoke, @regression, or custom tags
 - ✅ **Page Object Model** - Centralized selectors in JSON files for better maintainability
 - ✅ **Custom Commands** - Reusable custom commands (login, date picker selection)
-- ✅ **Multiple Test Suites** - E-commerce, practice scenarios, and end-to-end flows
-- ✅ **Mochawesome Reports** - Beautiful HTML reports with charts and screenshots
+
+### 📊 Reporting & Analytics
+- ✅ **Triple Reporting System** - Enterprise-grade reporting for all needs
+  - **Mochawesome Reports** - TDD tests with charts, metrics, and embedded screenshots
+  - **Cucumber HTML Reports** - BDD tests with Gherkin syntax and step-by-step visualization
+  - **Allure Reports** - Unified dashboard for TDD+BDD with historical trends and timeline
+- ✅ **Auto-Generated Reports** - Reports generated and opened automatically after test runs
+- ✅ **Historical Tracking** - Allure provides test history and trend analysis
+- ✅ **Screenshot on Failure** - Automatic screenshot capture embedded in reports
+
+### 🔧 Development & CI/CD
 - ✅ **CI/CD Ready** - GitHub Actions workflow with manual test selection
 - ✅ **Multi-Browser Support** - Chrome, Firefox, and Edge browser testing
-- ✅ **iframe Support** - cypress-iframe plugin integration
 - ✅ **Environment Configuration** - Centralized configuration with environment variables
 - ✅ **Test Data Management** - Fixtures for test data separation
-- ✅ **Screenshot on Failure** - Automatic screenshot capture for failed tests
+- ✅ **Webpack Preprocessor** - TypeScript and Feature file compilation
+- ✅ **iframe Support** - cypress-iframe plugin integration
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/sauravkmr780/CypressAutomationFramework.git
+cd CypressAutomationFramework
+
+# 2. Install dependencies
+npm install
+
+# 3. Run tests with reports (choose one)
+npm run test:smoke:report          # TDD smoke tests with Mochawesome report
+npm run test:bdd:smoke:report      # BDD smoke tests with Cucumber HTML report
+npm run test:smoke:allure          # TDD smoke tests with Allure report
+npm run test:bdd:allure            # BDD tests with Allure report
+npm run cypress:report             # All TDD tests with Mochawesome report
+npm run test:bdd:all:report        # All BDD tests with Cucumber report
+npm run test:allure                # All tests with Allure report
+```
+
+Reports will auto-generate and open in your default browser! 🎉
 
 ---
 
@@ -50,50 +94,53 @@
 CypressAutomationFramework/
 ├── .github/
 │   └── workflows/
-│       └── cypress.yml                 # GitHub Actions CI/CD workflow
+│       └── cypress.yml                          # GitHub Actions CI/CD workflow
 ├── cypress/
 │   ├── e2e/
-│   │   ├── Test1.cy.ts                # E-commerce test suite (6 tests)
-│   │   ├── Test2.cy.ts                # Practice test suite (12 tests)
-│   │   └── practiceE2E.cy.ts          # End-to-end flow test
+│   │   ├── Test1.cy.ts                         # TDD: E-commerce tests (6 tests, 2 @smoke)
+│   │   ├── Test2.cy.ts                         # TDD: Practice tests (12 tests, 2 @smoke)
+│   │   ├── practiceE2E.cy.ts                   # TDD: End-to-end flow test
+│   │   └── BDD/
+│   │       ├── ecommerce.feature               # BDD: Feature file with Gherkin syntax
+│   │       ├── ecommerceShop.feature           # BDD: Additional feature file
+│   │       └── ecommerceStepDef.ts             # BDD: Step definitions
 │   ├── fixtures/
-│   │   └── example.json               # Test data (credentials, products)
-│   ├── reports/                       # Mochawesome HTML reports
-│   ├── screenshots/                   # Auto-captured on test failures
+│   │   └── example.json                        # Test data (credentials, products)
+│   ├── reports/
+│   │   ├── html/                               # Mochawesome reports (TDD)
+│   │   │   └── index.html
+│   │   ├── cucumber-html/                      # Cucumber reports (BDD)
+│   │   │   └── index.html
+│   │   ├── cucumber-json/                      # Cucumber JSON (auto-generated)
+│   │   └── .jsons/                             # Mochawesome JSON (auto-generated)
+│   ├── screenshots/                            # Auto-captured on failures
 │   ├── support/
-│   │   ├── commands.ts                # Custom Cypress commands
-│   │   ├── e2e.ts                     # Global configuration
+│   │   ├── commands.ts                         # Custom Cypress commands
+│   │   ├── e2e.ts                              # Global config + tag filtering
 │   │   └── pageObjects/
-│   │       ├── products.json          # Product page selectors
-│   │       └── selectors.json         # Practice page selectors
-│   └── videos/                        # Recorded test videos
-├── cypress.config.js                  # Cypress configuration
-├── package.json                       # Dependencies and scripts
-├── tsconfig.json                      # TypeScript configuration
-└── README.md                          # This file
-```
-
----
-
-## 🔧 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** - Version 20.x or higher
-- **npm** - Version 9.x or higher
-- **Git** - For version control
-
-Check your versions:
-
-```bash
-node --version    # Should be v20.x or higher
-npm --version     # Should be v9.x or higher
-git --version     # Any recent version
+│   │       ├── products.json                   # Product page selectors
+│   │       └── selectors.json                  # Practice page selectors
+│   └── videos/                                 # Test execution videos
+├── .cypress-cucumber-preprocessorrc.json       # Cucumber preprocessor config
+├── cucumber-report.js                          # BDD report generator script
+├── cypress.config.js                           # Cypress + reporters config
+├── package.json                                # Dependencies and NPM scripts
+├── tsconfig.json                               # TypeScript configuration
+├── REPORTING_SETUP_GUIDE.md                    # Complete reporting documentation
+└── README.md                                   # This file
 ```
 
 ---
 
 ## 📥 Installation
+
+### Prerequisites
+
+- **Node.js** - Version 20.x or higher
+- **npm** - Version 9.x or higher
+- **Git** - For version control
+
+### Setup Steps
 
 1. **Clone the repository:**
 
@@ -108,76 +155,180 @@ cd CypressAutomationFramework
 npm install
 ```
 
-This will install:
-- Cypress v15.6.0
-- TypeScript v5.0.0
-- cypress-mochawesome-reporter
-- cypress-iframe
-- @types/node
+**Installed Packages:**
+- `cypress@15.6.0` - E2E testing framework
+- `typescript@5.0.0` - TypeScript compiler
+- `@badeball/cypress-cucumber-preprocessor@23.2.1` - BDD support
+- `cypress-mochawesome-reporter@4.0.2` - TDD HTML reports
+- `multiple-cucumber-html-reporter@3.9.3` - BDD HTML reports
+- `@mmisty/cypress-allure-adapter@3.3.2` - Allure reporter integration
+- `allure-commandline@2.34.1` - Allure CLI for report generation
+- `@cypress/webpack-preprocessor@7.0.2` - TypeScript & feature file compilation
+- `ts-loader@9.5.4` - TypeScript loader for webpack
+- `webpack@5.103.0` - Module bundler
+- `cypress-iframe@1.0.1` - iframe support
+- `@types/node@20.0.0` - Node.js type definitions
 
 ---
 
-## 🚀 Running Tests
+## 🚀 Test Execution
 
-### Interactive Mode (Cypress Test Runner)
+### TDD Tests (Traditional Cypress)
 
-Open Cypress Test Runner for development and debugging:
-
+**Run All TDD Tests:**
 ```bash
-npm run cypress:open
-```
+# Run all tests and auto-open Mochawesome report
+npm run cypress:report
 
-Then select a test file to run with live reloading and time-travel debugging.
-
-### Headless Mode (Command Line)
-
-Run all tests in headless mode:
-
-```bash
+# Run all tests without opening report
 npm run cypress:run
 ```
 
-### Run Specific Test File
+**Run TDD Smoke Tests:**
+```bash
+# Run tests tagged with @smoke and auto-open report
+npm run test:smoke:report
 
+# Run smoke tests without opening report
+npm run test:smoke
+
+# Open Cypress UI with smoke test filter
+npm run test:smoke:headed
+```
+
+**Run Specific TDD Test File:**
 ```bash
 npx cypress run --spec "cypress/e2e/Test1.cy.ts"
+npx cypress run --spec "cypress/e2e/Test2.cy.ts"
+npx cypress run --spec "cypress/e2e/practiceE2E.cy.ts"
 ```
 
-### Run with Specific Browser
+---
+
+### BDD Tests (Cucumber Gherkin)
+
+**Run All BDD Tests:**
+```bash
+# Run all feature files and auto-open Cucumber HTML report
+npm run test:bdd:all:report
+
+# Run all BDD tests without opening report
+npm run test:bdd:all
+```
+
+**Run BDD Smoke Tests:**
+```bash
+# Run scenarios tagged with @smoke and auto-open report
+npm run test:bdd:smoke:report
+
+# Run smoke scenarios without opening report
+npm run test:bdd:smoke
+```
+
+**Run Specific Feature File:**
+```bash
+npx cypress run --spec "cypress/e2e/BDD/ecommerce.feature"
+npx cypress run --spec "cypress/e2e/BDD/**/*.feature"
+```
+
+---
+
+### Tag-Based Execution
+
+#### TDD Tag Format (in test name):
+```typescript
+it('@smoke should validate login functionality', () => {
+  // Test code
+})
+
+it('@regression @api should test full flow', () => {
+  // Test code
+})
+```
+
+**Run TDD tests by tag:**
+```bash
+npm run test:smoke:report           # Runs tests with @smoke in name
+npx cypress run --env grep=@smoke   # Alternative syntax
+```
+
+#### BDD Tag Format (above scenario):
+```gherkin
+Feature: Ecommerce Application
+
+@smoke
+Scenario: Quick checkout
+  Given I am on Ecommerce Page
+  When I login to the application
+  Then order should be placed
+
+@regression
+Scenario: Full validation flow
+  Given I am on Ecommerce Page
+  When I login to the application
+  And I add items to cart
+  Then complete the order
+```
+
+**Run BDD scenarios by tag:**
+```bash
+npm run test:bdd:smoke:report                           # Runs @smoke scenarios
+npx cypress run --spec "cypress/e2e/BDD/**/*.feature" --env tags=@regression
+```
+
+---
+
+### Interactive Mode (Cypress UI)
+
+**Open Test Runner:**
+```bash
+npm run cypress:open
+
+# With tag filter (TDD only)
+npm run test:smoke:headed
+```
+
+---
+
+### Multi-Browser Execution
 
 ```bash
+# Chrome (default)
 npx cypress run --browser chrome
+
+# Firefox
 npx cypress run --browser firefox
+
+# Edge
 npx cypress run --browser edge
-```
 
-### Run with Custom Configuration
-
-```bash
-npx cypress run --config viewportWidth=1920,viewportHeight=1080
+# Electron (headless)
+npx cypress run --browser electron
 ```
 
 ---
 
 ## 📊 Test Suites
 
-### Test1.cy.ts - E-commerce Test Suite (6 tests)
+### TDD Test Suites (Traditional Cypress)
 
-Tests for GreenKart e-commerce application:
+#### Test1.cy.ts - E-commerce Test Suite
+- **Total Tests:** 6 (2 tagged with @smoke)
+- **Application:** https://rahulshettyacademy.com/seleniumPractise/
 
-1. ✅ API validation (product data)
-2. ✅ Search functionality
-3. ✅ Product filtering
+**Test Coverage:**
+1. ✅ **@smoke** My First Test Case - API validation & basic flow
+2. ✅ Product search functionality
+3. ✅ Product filtering by name
 4. ✅ Add to cart functionality
-5. ✅ Brand logo verification
-6. ✅ Complete checkout flow
+5. ✅ Brand logo and navigation verification
+6. ✅ **@smoke** Complete checkout flow with assertions
 
-**Application Under Test:** https://rahulshettyacademy.com/seleniumPractise/
+#### Test2.cy.ts - Practice Test Suite
+- **Total Tests:** 12 (2 tagged with @smoke)
+- **Application:** https://rahulshettyacademy.com/AutomationPractice/
 
-### Test2.cy.ts - Practice Test Suite (12 tests)
-
-Comprehensive UI interaction tests:
-
+**Test Coverage:**
 1. ✅ Checkbox operations
 2. ✅ Static dropdown selection
 3. ✅ Dynamic dropdown/autocomplete
@@ -188,97 +339,347 @@ Comprehensive UI interaction tests:
 8. ✅ Web table data extraction
 9. ✅ Mouse hover interactions
 10. ✅ Window.open handling
-11. ✅ iframe interactions
-12. ✅ React date picker selection
+11. ✅ **@smoke** iframe interactions with custom command
+12. ✅ **@smoke** React date picker selection
 
-**Application Under Test:** https://rahulshettyacademy.com/AutomationPractice/
+#### practiceE2E.cy.ts - End-to-End Flow
+- **Total Tests:** 1
+- **Application:** https://rahulshettyacademy.com/loginpagePractise/
 
-### practiceE2E.cy.ts - End-to-End Flow (1 test)
-
-Complete user journey test:
-
-1. ✅ User login with role selection
+**Complete User Journey:**
+1. ✅ User login with role selection (Teacher/Student)
 2. ✅ Product browsing and filtering
 3. ✅ Add multiple products to cart
-4. ✅ Cart price validation
+4. ✅ Cart price validation and calculation
 5. ✅ Checkout process
-6. ✅ Country selection
-7. ✅ Order confirmation
-
-**Application Under Test:** https://rahulshettyacademy.com/loginpagePractise/
-
-**Total Tests:** 19 passing tests
+6. ✅ Country selection from dropdown
+7. ✅ Terms acceptance
+8. ✅ Order confirmation and success message
 
 ---
 
-## 📈 Reports
+### BDD Test Suites (Cucumber Gherkin)
 
-### Mochawesome HTML Reports
+#### ecommerce.feature - E-commerce BDD Flow
+- **Total Scenarios:** 2 (1 @smoke, 1 @regression)
+- **Application:** https://rahulshettyacademy.com/loginpagePractise/
 
-After running tests, beautiful HTML reports are generated automatically.
+**Scenarios:**
 
-**Location:** `cypress/reports/index.html`
+**@smoke Scenario: Ecommerce product delivery**
+```gherkin
+Given I am on Ecommerce Page
+When I login to the application
+And I add items to cart and checkout
+And Validate the total price limit
+Then select the country, submit and verify Thank You
+```
+
+**@regression Scenario: Verify cart total calculation**
+```gherkin
+Given I am on Ecommerce Page
+When I login to the application
+And I add items to cart and checkout
+And Validate the total price limit
+```
+
+**Step Definitions:** `cypress/e2e/BDD/ecommerceStepDef.ts`
+- 5 step definitions (1 Given, 3 When, 1 Then)
+- Uses custom commands (`cy.loginToShop`)
+- Page Object Model integration
+- Fixture data management
+
+---
+
+### Test Summary
+
+| Test Type | Test Files | Total Tests/Scenarios | Smoke Tests | Applications |
+|-----------|------------|----------------------|-------------|--------------|
+| **TDD** | 3 files | 19 tests | 4 @smoke | 3 apps |
+| **BDD** | 2 features | 2 scenarios | 1 @smoke | 1 app |
+| **Total** | 5 files | 21 tests | 5 smoke | 3 apps |
+
+---
+
+## 📊 Reporting
+
+### Mochawesome Reports (TDD)
+
+**Purpose:** Optimized for traditional Cypress test reporting with technical details
+
+**Location:** `cypress/reports/html/index.html`
 
 **Features:**
-- ✅ Test execution summary
-- ✅ Pass/Fail statistics
-- ✅ Execution time for each test
-- ✅ Interactive charts and graphs
-- ✅ Screenshots embedded for failures
-- ✅ Detailed error messages
-- ✅ Browser and environment info
+- ✅ **Dashboard Summary** - Total tests, pass/fail/skipped counts, pass rate percentage
+- ✅ **Visual Charts** - Pie chart for test distribution, bar chart for duration
+- ✅ **Test Details** - Each test with status indicator, error messages, stack traces
+- ✅ **Embedded Screenshots** - Screenshots for failed tests captured at failure point
+- ✅ **Expandable Suites** - Collapsible test suites with nested organization
+- ✅ **Single HTML File** - All assets embedded, easy to share via email/storage
+- ✅ **Execution Metrics** - Duration, retries, browser info
 
-**View Report:**
-
+**Generate & View:**
 ```bash
-# Open report in default browser (Windows)
-start cypress/reports/index.html
+# Auto-generate and open report after tests
+npm run cypress:report          # All TDD tests
+npm run test:smoke:report       # Smoke tests only
 
-# Mac
-open cypress/reports/index.html
+# Open existing report
+npm run open:report
 
-# Linux
-xdg-open cypress/reports/index.html
+# Manual generation (if needed)
+npm run generate:report
 ```
+
+**Report Workflow:**
+1. Tests run → JSON files generated to `cypress/reports/.jsons/`
+2. NPM script merges JSONs → `cypress/reports/report.json`
+3. Marge converts JSON → HTML at `cypress/reports/html/index.html`
+4. Report auto-opens in default browser
+
+---
+
+### Cucumber HTML Reports (BDD)
+
+**Purpose:** Optimized for BDD feature reporting with Gherkin syntax visualization
+
+**Location:** `cypress/reports/cucumber-html/index.html`
+
+**Features:**
+- ✅ **Feature Overview** - All features listed with pass/fail status
+- ✅ **Gherkin Syntax Display** - Proper Given/When/Then/And steps
+- ✅ **Step-by-Step Status** - Green checkmarks for passed steps, red X for failures
+- ✅ **Tag Display** - Visual display of @smoke, @regression, and custom tags
+- ✅ **Scenario Details** - Duration per scenario, background steps
+- ✅ **Metadata** - Browser, platform, execution date, project info
+- ✅ **Multi-Feature Support** - Multiple feature files in single report
+- ✅ **Business Readable** - Perfect for non-technical stakeholders
+
+**Generate & View:**
+```bash
+# Auto-generate and open report after tests
+npm run test:bdd:all:report      # All BDD scenarios
+npm run test:bdd:smoke:report    # Smoke scenarios only
+
+# Open existing report
+npm run open:bdd:report
+
+# Manual generation (if needed)
+npm run generate:cucumber:report
+```
+
+**Report Workflow:**
+1. Feature files run → Cucumber JSON generated to `cypress/reports/cucumber-json/`
+2. Node script (`cucumber-report.js`) processes JSON
+3. Multiple-cucumber-html-reporter generates HTML at `cypress/reports/cucumber-html/`
+4. Report auto-opens in default browser
+
+---
+
+### Report Comparison
+
+| Feature | Mochawesome (TDD) | Cucumber HTML (BDD) | Allure (Unified) |
+|---------|------------------|---------------------|------------------|
+| **Best For** | Technical test details | Business-readable features | Complete analysis + history |
+| **Test Format** | .cy.ts files | .feature files | Both TDD + BDD |
+| **Syntax Display** | TypeScript code | Gherkin (Given/When/Then) | Both + step details |
+| **Charts** | ✅ Pie & Bar charts | ❌ No charts | ✅ Multiple chart types |
+| **Screenshots** | ✅ Embedded | ⚠️ Limited | ✅ Fully embedded |
+| **Tags** | In test name | ✅ Prominent display | ✅ Filterable tags |
+| **Historical Data** | ❌ No history | ❌ No history | ✅ Trend graphs |
+| **Timeline** | ❌ No timeline | ❌ No timeline | ✅ Gantt chart |
+| **Categorization** | ❌ No categories | ❌ No categories | ✅ Auto-categorized |
+| **Retries** | ⚠️ Basic | ❌ Not shown | ✅ Visual tracking |
+| **Audience** | Developers/QA | Business + Technical | All stakeholders |
+| **File Type** | Single HTML | Single HTML | Multiple files + server |
+| **Location** | `html/index.html` | `cucumber-html/index.html` | Served at `http://127.0.0.1:<port>` |
+
+**Recommendation:**
+- **Daily Dev Testing:** Mochawesome (TDD) or Cucumber HTML (BDD)
+- **Complete Analysis:** Allure for unified view
+- **Historical Tracking:** Allure (accumulate results across runs)
+- **Stakeholder Demos:** Cucumber HTML (BDD) + Allure dashboard
+
+---
 
 ### Screenshots and Videos
 
-- **Screenshots:** Automatically captured on test failures → `cypress/screenshots/`
-- **Videos:** Test execution recordings (if enabled) → `cypress/videos/`
+- **Screenshots:** Auto-captured on failures → `cypress/screenshots/`
+- **Videos:** Test execution recordings (disabled by default) → `cypress/videos/`
+- **Embedded:** Screenshots automatically embedded in Mochawesome reports
+
+---
+
+### Report Scripts Reference
+
+```bash
+# TDD Reports
+npm run generate:report           # Generate Mochawesome HTML
+npm run open:report              # Open TDD report
+
+# BDD Reports  
+npm run generate:cucumber:report # Generate Cucumber HTML
+npm run open:bdd:report         # Open BDD report
+
+# Clean Reports
+npm run clean:reports           # Remove all old reports
+```
+
+---
+
+### Allure Reports (Unified TDD+BDD)
+
+**Purpose:** Enterprise-grade unified reporting with historical tracking and advanced analytics
+
+**⚠️ Note:** Allure reports require a web server to function (served at `http://127.0.0.1:<port>`). This is different from Mochawesome/Cucumber HTML which are static HTML files. The server is started automatically by `npx allure open` command.
+
+**Location:** `allure-report/index.html` (served via Allure's built-in server)
+
+**Features:**
+- ✅ **Unified Dashboard** - Single view for all TDD + BDD tests
+- ✅ **Historical Trends** - Track test results across multiple runs with trend graphs
+- ✅ **Timeline View** - Visual Gantt chart of test execution timeline
+- ✅ **Categorized Failures** - Automatic grouping by failure type (product defects, test defects, system issues)
+- ✅ **Behaviors View** - BDD feature/scenario/step hierarchy with Gherkin syntax
+- ✅ **Suites View** - Tests organized by file with pass/fail status
+- ✅ **Graphs** - Status chart, severity chart, duration chart
+- ✅ **Attachments** - Screenshots, videos, logs automatically embedded
+- ✅ **Retry Tracking** - Visual representation of retry attempts
+- ✅ **Tags/Labels** - Filter by @smoke, @regression, custom tags
+- ✅ **Severity Levels** - Blocker, critical, normal, minor, trivial
+- ✅ **Test Details** - Step-by-step execution with screenshots and stack traces
+- ✅ **Environment Info** - Browser, platform, Cypress version metadata
+- ✅ **Beautiful UI** - Modern, interactive, professional dashboard
+
+**Generate & View:**
+```bash
+# Auto-generate and open report after tests
+npm run test:allure              # All tests
+npm run test:smoke:allure        # TDD smoke tests
+npm run test:bdd:allure          # All BDD tests
+npm run test:bdd:smoke:allure    # BDD smoke tests
+
+# Open existing report
+npm run open:allure:report
+
+# Manual generation (if needed)
+npm run generate:allure:report
+```
+
+**Report Workflow:**
+1. Tests run → Allure results generated to `allure-results/`
+2. NPM script converts results → HTML at `allure-report/`
+3. Allure's built-in server starts and report auto-opens in browser at `http://127.0.0.1:<port>`
+4. View dashboard, suites, graphs, timeline, behaviors
+
+**Why Allure needs a server:**
+- Allure uses AJAX to load JSON data dynamically
+- Unlike Mochawesome (single HTML), Allure has multiple data files
+- The `npx allure open` command starts a lightweight server automatically
+- Server runs only while viewing reports, stops when terminal is closed
+
+**Historical Tracking:**
+```bash
+# Run 1 - Initial baseline
+npx cypress run
+npm run generate:allure:report
+
+# Run 2 - Accumulate results (don't clean)
+npx cypress run
+npm run generate:allure:report
+
+# Now trend graph shows historical data!
+```
+
+**Advanced Annotations:**
+```typescript
+// Add metadata to tests
+it('should validate checkout', () => {
+  cy.allure().description('Complete checkout flow validation')
+  cy.allure().severity('critical')
+  cy.allure().tag('smoke', 'regression', 'checkout')
+  cy.allure().issue('JIRA-123', 'https://jira.company.com/JIRA-123')
+  
+  // Test code with steps
+  cy.allure().step('Add product to cart', () => {
+    cy.get('.add-to-cart').click()
+  })
+})
+```
+
+---
+
+### Complete Documentation
+
+For detailed reporting setup, configuration, and troubleshooting, see:
+- 📄 **[REPORTING_SETUP_GUIDE.md](./REPORTING_SETUP_GUIDE.md)** - Mochawesome & Cucumber HTML setup
+- 📄 **[ALLURE_SETUP_GUIDE.md](./ALLURE_SETUP_GUIDE.md)** - Complete Allure configuration and features
+- 📄 **[ALLURE_QUICK_START.md](./ALLURE_QUICK_START.md)** - Quick reference for Allure commands
 
 ---
 
 ## 🔄 CI/CD Integration
 
-### GitHub Actions
+### GitHub Actions Workflow
 
-Automated testing runs on every push and can be triggered manually.
+**File:** `.github/workflows/cypress.yml`
+
+**Automated Triggers:**
+- ✅ Push to main branch
+- ✅ Pull requests
+- ✅ Manual workflow dispatch
 
 **Workflow Features:**
-- ✅ Runs on push to main branch
-- ✅ Manual workflow dispatch with options
-- ✅ Select specific test file to run
-- ✅ Choose browser (Chrome/Firefox/Edge)
-- ✅ Automatic report generation
-- ✅ Artifact upload (30-day retention)
+- ✅ **Multi-Test Support** - Run TDD, BDD, or specific test files
+- ✅ **Tag-Based Execution** - Run smoke tests or full regression suite
+- ✅ **Multi-Browser Testing** - Chrome, Firefox, Edge support
+- ✅ **Dual Report Generation** - Both Mochawesome and Cucumber reports
+- ✅ **Artifact Upload** - Reports, screenshots, videos (30-day retention)
+- ✅ **Parallel Execution** - Support for parallel test runs
+- ✅ **Environment Variables** - Configurable base URLs and credentials
 
-**Manual Test Execution:**
+**Manual Workflow Dispatch:**
 
-1. Go to [Actions Tab](https://github.com/sauravkmr780/CypressAutomationFramework/actions)
-2. Click "Cypress Tests" workflow
-3. Click "Run workflow" button
-4. Select:
-   - Test file (All Tests / Test1 / Test2 / practiceE2E)
-   - Browser (Chrome / Firefox / Edge)
-5. Click "Run workflow"
+1. Navigate to [Actions Tab](https://github.com/sauravkmr780/CypressAutomationFramework/actions)
+2. Select "Cypress Tests" workflow
+3. Click "Run workflow" dropdown
+4. Configure options:
+   - **Test Type:** All / TDD Smoke / BDD Smoke / Specific Suite
+   - **Browser:** Chrome / Firefox / Edge / Electron
+   - **Environment:** Staging / Production
+5. Click "Run workflow" button
+
+**Workflow Jobs:**
+```yaml
+jobs:
+  cypress-run:
+    - Install dependencies
+    - Run Cypress tests (TDD or BDD)
+    - Generate reports (Mochawesome or Cucumber)
+    - Upload artifacts (reports, screenshots, videos)
+    - Post results as PR comment (optional)
+```
 
 **View Results:**
+- ✅ Workflow status in Actions tab with detailed logs
+- ✅ Download artifacts: Reports, screenshots, videos
+- ✅ GitHub Pages deployment (optional)
+- ✅ Slack/Email notifications (configurable)
 
-- Workflow runs are visible in Actions tab
-- Download artifacts (reports, screenshots) after completion
-- Test reports deployed to GitHub Pages (if enabled)
+**Example Workflow Commands:**
+```yaml
+# TDD smoke tests
+npm run test:smoke
 
-**Configuration File:** `.github/workflows/cypress.yml`
+# BDD smoke tests  
+npm run test:bdd:smoke
+
+# All TDD tests
+npm run cypress:run
+
+# All BDD tests
+npm run test:bdd:all
+```
 
 ---
 
@@ -287,26 +688,106 @@ Automated testing runs on every push and can be triggered manually.
 ### Cypress Configuration (`cypress.config.js`)
 
 ```javascript
-{
-  projectId: "4b7344",              // Cypress Cloud project ID
+import { defineConfig } from "cypress";
+import reporter from 'cypress-mochawesome-reporter/plugin.js';
+import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-preprocessor";
+import webpack from "@cypress/webpack-preprocessor";
+
+export default defineConfig({
+  projectId: "ts6nbs",
+  
+  // Mochawesome Reporter (TDD)
   reporter: 'cypress-mochawesome-reporter',
   reporterOptions: {
     reportDir: 'cypress/reports',
     charts: true,
     reportPageTitle: 'Cypress Test Report',
     embeddedScreenshots: true,
-    inlineAssets: true
+    inlineAssets: true,
+    saveAllAttempts: false
   },
+  
   e2e: {
     env: {
-      url: "https://rahulshettyacademy.com"  // Base URL
+      url: "https://rahulshettyacademy.com"
     },
-    specPattern: "cypress/e2e/**/*.cy.ts",   // Test file pattern
-    screenshotOnRunFailure: true,             // Auto screenshot
-    video: false                              // Video recording
+    async setupNodeEvents(on, config) {
+      // Register Cucumber Preprocessor (BDD) - MUST BE FIRST
+      await addCucumberPreprocessorPlugin(on, config);
+      
+      // Register Mochawesome Reporter (TDD)
+      reporter(on);
+      
+      // Register Allure Reporter (TDD & BDD) - MUST BE AFTER CUCUMBER
+      await configureAllureAdapterPlugins(on, config, {
+        enableInfo: false // Disable Allure server during test run (opens after)
+      });
+      
+      // Webpack for TypeScript and Feature files
+      on("file:preprocessor", webpack({
+        webpackOptions: {
+          resolve: { extensions: [".ts", ".js"] },
+          module: {
+            rules: [
+              {
+                test: /\.ts$/,
+                exclude: [/node_modules/],
+                use: [{ loader: "ts-loader" }]
+              },
+              {
+                test: /\.feature$/,
+                use: [{
+                  loader: "@badeball/cypress-cucumber-preprocessor/webpack",
+                  options: config
+                }]
+              }
+            ]
+          }
+        }
+      }));
+      
+      return config;
+    },
+    retries: {
+      runMode: 1,      // Retry once in CI
+      openMode: 0      // No retry in dev
+    },
+    specPattern: [
+      "cypress/e2e/**/*.cy.ts",      // TDD tests
+      "cypress/e2e/**/*.feature"     // BDD tests
+    ],
+    screenshotOnRunFailure: true,
+    video: false
   }
+});
+```
+
+### Cucumber Preprocessor Configuration
+
+**File:** `.cypress-cucumber-preprocessorrc.json`
+
+```json
+{
+  "stepDefinitions": [
+    "cypress/e2e/BDD/**/*.ts"
+  ],
+  "messages": {
+    "enabled": false
+  },
+  "json": {
+    "enabled": true,
+    "output": "cypress/reports/cucumber-json/cucumber-report.json"
+  },
+  "filterSpecs": true,
+  "omitFiltered": true
 }
 ```
+
+**Key Settings:**
+- `stepDefinitions` - Location of step definition files
+- `json.enabled` - Generate JSON for report creation
+- `filterSpecs` - Enable tag-based filtering
+- `omitFiltered` - Skip scenarios not matching tags
 
 ### TypeScript Configuration (`tsconfig.json`)
 
@@ -326,21 +807,58 @@ Automated testing runs on every push and can be triggered manually.
 }
 ```
 
-### Environment Variables
+### Environment Variables & Tags
 
-Set base URL and other configs:
-
+**Set Base URL:**
 ```javascript
-// Access in tests
-Cypress.env('url')
+// cypress.config.js
+env: {
+  url: "https://rahulshettyacademy.com"
+}
 
-// Set via command line
+// Access in tests
+cy.visit(Cypress.env('url') + '/seleniumPractise/')
+```
+
+**Command Line:**
+```bash
+# Override base URL
 npx cypress run --env url=https://staging.example.com
 
-// Set in cypress.config.js
-env: {
-  url: "https://rahulshettyacademy.com",
-  apiKey: "your-api-key"
+# Set multiple env variables
+npx cypress run --env url=https://test.com,apiKey=abc123
+
+# Tag-based execution
+npx cypress run --env grep=@smoke          # TDD tags
+npx cypress run --env tags=@smoke          # BDD tags
+```
+
+### NPM Scripts
+
+**Complete script list:**
+```json
+{
+  "cypress:open": "cypress open",
+  
+  "clean:reports": "if exist cypress\\reports rmdir /s /q cypress\\reports && mkdir cypress\\reports",
+  
+  "generate:report": "npx mochawesome-merge cypress/reports/.jsons/*.json -o cypress/reports/report.json && npx marge cypress/reports/report.json -f index -o cypress/reports/html",
+  "generate:cucumber:report": "node cucumber-report.js",
+  
+  "cypress:run": "npm run clean:reports && cypress run && npm run generate:report",
+  "cypress:report": "npm run clean:reports && cypress run && npm run generate:report && start cypress\\reports\\html\\index.html",
+  
+  "test:smoke": "npm run clean:reports && cypress run --env grep=@smoke && npm run generate:report",
+  "test:smoke:report": "npm run clean:reports && cypress run --env grep=@smoke && npm run generate:report && start cypress\\reports\\html\\index.html",
+  "test:smoke:headed": "cypress open --env grep=@smoke",
+  
+  "test:bdd:all": "npm run clean:reports && cypress run --spec 'cypress/e2e/BDD/**/*.feature' && npm run generate:cucumber:report",
+  "test:bdd:all:report": "npm run clean:reports && cypress run --spec 'cypress/e2e/BDD/**/*.feature' && npm run generate:cucumber:report && start cypress\\reports\\cucumber-html\\index.html",
+  "test:bdd:smoke": "npm run clean:reports && cypress run --spec 'cypress/e2e/BDD/**/*.feature' --env tags=@smoke && npm run generate:cucumber:report",
+  "test:bdd:smoke:report": "npm run clean:reports && cypress run --spec 'cypress/e2e/BDD/**/*.feature' --env tags=@smoke && npm run generate:cucumber:report && start cypress\\reports\\cucumber-html\\index.html",
+  
+  "open:report": "start cypress\\reports\\html\\index.html",
+  "open:bdd:report": "start cypress\\reports\\cucumber-html\\index.html"
 }
 ```
 
@@ -604,23 +1122,57 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
-## 📝 Scripts Reference
+## 📝 Complete Scripts Reference
 
+### Development
 ```bash
-# Open Cypress Test Runner
-npm run cypress:open
+npm run cypress:open              # Open Cypress Test Runner
+npm run test:smoke:headed         # Open Cypress UI with smoke test filter
+```
 
-# Run all tests headlessly
-npm run cypress:run
+### TDD Test Execution
+```bash
+npm run cypress:report            # All TDD tests + report + auto-open
+npm run cypress:run               # All TDD tests + report (no open)
+npm run test:smoke:report         # TDD smoke tests + report + auto-open
+npm run test:smoke                # TDD smoke tests + report (no open)
+```
 
-# Run with report generation
-npm run cypress:report
+### BDD Test Execution
+```bash
+npm run test:bdd:all:report       # All BDD scenarios + report + auto-open
+---
 
-# Install dependencies
-npm install
+## 🔗 Useful Resources
 
-# Update Cypress
-npm update cypress
+### Framework Documentation
+- 📄 [REPORTING_SETUP_GUIDE.md](./REPORTING_SETUP_GUIDE.md) - Complete reporting setup documentation
+- 📁 [GitHub Repository](https://github.com/sauravkmr780/CypressAutomationFramework)
+- ⚡ [GitHub Actions Workflows](https://github.com/sauravkmr780/CypressAutomationFramework/actions)
+
+### Official Documentation
+- [Cypress Documentation](https://docs.cypress.io/)
+- [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
+- [TypeScript Documentation](https://www.typescriptlang.org/)
+- [Cucumber Documentation](https://cucumber.io/docs/cucumber/)
+- [Gherkin Syntax Reference](https://cucumber.io/docs/gherkin/reference/)
+
+### Plugins & Tools
+- [Mochawesome Reporter](https://github.com/adamgruber/mochawesome)
+- [Multiple Cucumber HTML Reporter](https://github.com/wswebcreation/multiple-cucumber-html-reporter)
+- [Cypress Cucumber Preprocessor](https://github.com/badeball/cypress-cucumber-preprocessor)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+npm run open:report               # Open TDD report in browser
+npm run open:bdd:report           # Open BDD report in browser
+npm run clean:reports             # Remove all old reports
+```
+
+### Utilities
+```bash
+npm install                       # Install all dependencies
+npm update cypress                # Update Cypress version
+npx cypress verify                # Verify Cypress installation
+npx cypress info                  # Show Cypress environment info
 ```
 
 ---
@@ -658,18 +1210,49 @@ This project is licensed under the ISC License.
 
 ---
 
-## 📊 Project Stats
+## 📊 Project Statistics
 
-- **Total Tests:** 19
-- **Test Suites:** 3
-- **Custom Commands:** 2
-- **Page Objects:** 2
-- **Browsers Supported:** Chrome, Firefox, Edge
+### Test Coverage
+- **Total Test Files:** 4 (3 TDD + 1 BDD)
+- **Total Tests/Scenarios:** 21 (19 TDD + 2 BDD)
+- **Smoke Tests:** 5 (@smoke tagged)
+- **Applications Under Test:** 3
+
+### Framework Components
+- **Custom Commands:** 2 (`cy.loginToShop`, `cy.selectDate`)
+- **Page Object Files:** 2 JSON files (products, selectors)
+- **Step Definitions:** 5 BDD steps (1 Given, 3 When, 1 Then)
+- **Feature Files:** 1 (ecommerce.feature)
+- **Reporting Systems:** 3 (Mochawesome, Cucumber HTML, Allure)
+
+### Technology Stack
+- **Testing Framework:** Cypress 15.6.0
+- **Language:** TypeScript 5.0.0
+- **BDD Support:** Cucumber (Gherkin)
+- **Reporters:** Mochawesome + Cucumber HTML + Allure
+- **Build Tool:** Webpack 5.103.0
 - **CI/CD:** GitHub Actions
-- **Reporting:** Mochawesome HTML
+
+### Browser Support
+- ✅ Chrome (default)
+- ✅ Firefox
+- ✅ Edge
+- ✅ Electron (headless)
+
+---
+
+## 🎯 Key Highlights
+
+✅ **Dual Testing Approach** - TDD and BDD in single framework  
+✅ **Tag-Based Execution** - Run smoke or regression suites  
+✅ **Triple Reporting** - Mochawesome + Cucumber HTML + Allure  
+✅ **Historical Tracking** - Allure provides test trends over time  
+✅ **Type Safety** - Full TypeScript integration  
+✅ **CI/CD Ready** - GitHub Actions with manual dispatch  
+✅ **Production Ready** - Complete documentation and best practices  
 
 ---
 
 **Happy Testing! 🚀**
 
-*Last Updated: November 25, 2025*
+*Last Updated: November 28, 2025*

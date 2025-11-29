@@ -117,7 +117,7 @@ describe('Automation Practice Test Suite', () => {
         cy.contains('Blog').click()
     })
     })
-    it('should handle iFrames', () => {
+    it('@smoke should handle iFrames', () => {
         // Working with iFrames
         cy.frameLoaded(selectors.coursesIframe)
         cy.iframe(selectors.coursesIframe)
@@ -127,7 +127,7 @@ describe('Automation Practice Test Suite', () => {
             .find(selectors.iframePromoText)
             .should('contain.text', 'Get any 2 courses FREE with Platinum subscription')
     })
-    it('should handle date picker', () => {
+    it('@smoke should handle date picker', () => {
         cy.visit('https://rahulshettyacademy.com/seleniumPractise/#/offers')
         
         // Select date: 12 November 2026

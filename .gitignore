@@ -1,6 +1,50 @@
+# Dependencies
 node_modules/
+package-lock.json
+
+# Cypress artifacts
 cypress/videos/
 cypress/screenshots/
 cypress/reports/
+cypress/downloads/
+
+# Allure reports
+allure-results/
+allure-report/
+.allure/
+
+# Cucumber messages
+.messages/
+cucumber-messages.ndjson
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build files
+dist/
+build/
+.cache/
+
+# Test results
+junit.xml
+test-results/
+coverage/
