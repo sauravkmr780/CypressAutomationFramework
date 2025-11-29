@@ -1,4 +1,4 @@
-import selectors from '../support/pageObjects/selectors.json'
+import selectors from '../../support/pageObjects/selectors.json'
 import 'cypress-iframe'
 
 describe('Automation Practice Test Suite', () => {

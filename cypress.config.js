@@ -76,8 +76,8 @@ export default defineConfig({
       openMode: 0
     },
     specPattern: [
-      "cypress/e2e/**/*.cy.ts",
-      "cypress/e2e/**/*.feature"
+      "cypress/e2e/TDD/**/*.cy.ts",
+      "cypress/e2e/BDD/**/*.feature"
     ],
     screenshotOnRunFailure: true,
     video: false

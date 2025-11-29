@@ -97,9 +97,13 @@ CypressAutomationFramework/
 │       └── cypress.yml                          # GitHub Actions CI/CD workflow
 ├── cypress/
 │   ├── e2e/
-│   │   ├── Test1.cy.ts                         # TDD: E-commerce tests (6 tests, 2 @smoke)
-│   │   ├── Test2.cy.ts                         # TDD: Practice tests (12 tests, 2 @smoke)
-│   │   ├── practiceE2E.cy.ts                   # TDD: End-to-end flow test
+│   │   ├── TDD/
+│   │   │   ├── Test1.cy.ts                     # TDD: E-commerce tests (6 tests, 2 @smoke)
+│   │   │   ├── Test2.cy.ts                     # TDD: Practice tests (12 tests, 2 @smoke)
+│   │   │   ├── practiceE2E.cy.ts               # TDD: End-to-end flow test
+│   │   │   ├── GETApiValidation.cy.ts          # TDD: GET API tests
+│   │   │   ├── POSTAPIValidation.cy.ts         # TDD: POST API tests
+│   │   │   └── loginAPI.cy.ts                  # TDD: API login and e-commerce flow
 │   │   └── BDD/
 │   │       ├── ecommerce.feature               # BDD: Feature file with Gherkin syntax
 │   │       ├── ecommerceShop.feature           # BDD: Additional feature file
@@ -198,9 +202,9 @@ npm run test:smoke:headed
 
 **Run Specific TDD Test File:**
 ```bash
-npx cypress run --spec "cypress/e2e/Test1.cy.ts"
-npx cypress run --spec "cypress/e2e/Test2.cy.ts"
-npx cypress run --spec "cypress/e2e/practiceE2E.cy.ts"
+npx cypress run --spec "cypress/e2e/TDD/Test1.cy.ts"
+npx cypress run --spec "cypress/e2e/TDD/Test2.cy.ts"
+npx cypress run --spec "cypress/e2e/TDD/practiceE2E.cy.ts"
 ```
 
 ---
@@ -312,7 +316,7 @@ npx cypress run --browser electron
 
 ### TDD Test Suites (Traditional Cypress)
 
-#### Test1.cy.ts - E-commerce Test Suite
+#### TDD/Test1.cy.ts - E-commerce Test Suite
 - **Total Tests:** 6 (2 tagged with @smoke)
 - **Application:** https://rahulshettyacademy.com/seleniumPractise/
 
@@ -324,7 +328,7 @@ npx cypress run --browser electron
 5. ✅ Brand logo and navigation verification
 6. ✅ **@smoke** Complete checkout flow with assertions
 
-#### Test2.cy.ts - Practice Test Suite
+#### TDD/Test2.cy.ts - Practice Test Suite
 - **Total Tests:** 12 (2 tagged with @smoke)
 - **Application:** https://rahulshettyacademy.com/AutomationPractice/
 
@@ -342,7 +346,7 @@ npx cypress run --browser electron
 11. ✅ **@smoke** iframe interactions with custom command
 12. ✅ **@smoke** React date picker selection
 
-#### practiceE2E.cy.ts - End-to-End Flow
+#### TDD/practiceE2E.cy.ts - End-to-End Flow
 - **Total Tests:** 1
 - **Application:** https://rahulshettyacademy.com/loginpagePractise/
 
