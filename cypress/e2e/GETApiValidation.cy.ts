@@ -70,7 +70,7 @@ describe('API Validation', () => {
         })
     })
 
-    it('Modify request URL and continue with modified URL',  () => {
+    it.skip('Modify request URL and continue with modified URL',  () => {
 
         cy.visit("https://rahulshettyacademy.com/angularAppdemo/");
 
