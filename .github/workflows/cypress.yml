@@ -52,19 +52,53 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
+      - name: Generate Mochawesome Report
+        if: always()
+        run: npm run generate:report
+      
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          npm run generate:allure:report
+      
       - name: Upload Mochawesome Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-report
-          path: cypress/reports/
+          name: mochawesome-report
+          path: cypress/reports/html/
           retention-days: 30
       
-      - name: Deploy report to GitHub Pages
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 30
+      
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report
+          path: allure-report/
+          retention-days: 30
+      
+      - name: Deploy Allure Report to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./cypress/reports
-          publish_branch: gh-pages
+          publish_dir: ./allure-report
+          publish_branch: gh-pages-allure
+          force_orphan: true
+      
+      - name: Deploy Mochawesome Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./cypress/reports/html
+          publish_branch: gh-pages-mochawesome
           force_orphan: true
