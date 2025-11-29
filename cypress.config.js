@@ -21,6 +21,8 @@ export default defineConfig({
       allure: true,
       allureResultsPath: 'allure-results'
     },
+    chromeWebSecurity: false,
+    downloadsFolder: 'cypress/downloads',
     async setupNodeEvents(on, config) {
       // Register Mochawesome Reporter (TDD)
       reporter(on);

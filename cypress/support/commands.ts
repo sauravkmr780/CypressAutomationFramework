@@ -12,14 +12,15 @@ import selectors from './pageObjects/selectors.json'
 import products from './pageObjects/products.json'
 
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      // Add custom command types here
-      // Example: login(email: string, password: string): Chainable<void>
-      selectDate(day: number, month: string, year: number): Chainable<void>
-      loginToShop(username: string, password: string, role: string, roleValue: string): Chainable<void>
+    namespace Cypress {
+        interface Chainable {
+            // Add custom command types here
+            // Example: login(email: string, password: string): Chainable<void>
+            selectDate(day: number, month: string, year: number): Chainable<void>
+            loginToShop(username: string, password: string, role: string, roleValue: string): Chainable<void>
+            loginAPI(): Chainable<string>
+        }
     }
-  }
 }
 
 // Custom command to select date in React date picker
@@ -29,18 +30,18 @@ Cypress.Commands.add('selectDate', (day: number, month: string, year: number) =>
         'May': '05', 'June': '06', 'July': '07', 'August': '08',
         'September': '09', 'October': '10', 'November': '11', 'December': '12'
     }
-    
+
     // Open calendar
     cy.get(selectors.datePickerCalendarBtn).click()
-    
+
     // Navigate to year view
     cy.get(selectors.datePickerNavLabel).click()
-    
+
     // Get current year and navigate to target year
     cy.get(selectors.datePickerNavLabel).invoke('text').then((currentYearText) => {
         const currentYear = parseInt(currentYearText.trim())
         const yearDiff = year - currentYear
-        
+
         if (yearDiff > 0) {
             for (let i = 0; i < yearDiff; i++) {
                 cy.get(selectors.datePickerNextBtn).click()
@@ -51,16 +52,16 @@ Cypress.Commands.add('selectDate', (day: number, month: string, year: number) =>
             }
         }
     })
-    
+
     // Select month
     cy.contains(selectors.datePickerMonths, month.substring(0, 3)).click()
-    
+
     // Select day
     cy.get(selectors.datePickerDays)
         .not(selectors.datePickerDaysNotNeighbor)
         .contains('abbr', day.toString())
         .click()
-    
+
     // Verify selected date
     cy.get(selectors.dateInputMonth).should('have.value', monthMap[month])
     cy.get(selectors.dateInputDay).should('have.value', day.toString())
@@ -76,4 +77,18 @@ Cypress.Commands.add('loginToShop', (username: string, password: string, role: s
     cy.get(products.signInBtn).click()
 })
 
-export {}
+Cypress.Commands.add('loginAPI', () => {
+    cy.request({
+        method: 'POST',
+        url: 'https://rahulshettyacademy.com/api/ecom/auth/login',
+        body: {
+            "userEmail": "sauravkmr780@gmail.com",
+            "userPassword": "@1Infosys"
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        Cypress.env('token', response.body.token)
+    })
+})
+
+export { }
