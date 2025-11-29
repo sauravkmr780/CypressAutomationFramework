@@ -1,0 +1,110 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-11-29T00:17:07.773Z",
+    "end": "2025-11-29T00:17:20.756Z",
+    "duration": 12983,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "fb20d99b-db09-4746-847b-587924bd47e1",
+      "title": "",
+      "fullFile": "cypress/e2e/practiceE2E.cy.ts",
+      "file": "cypress/e2e/practiceE2E.cy.ts",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "70c8ff01-283a-4472-8b18-2996e841e5e5",
+          "title": "Automation Practice Test Suite",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Validate e-commerce page e2e flow",
+              "fullTitle": "Automation Practice Test Suite Validate e-commerce page e2e flow",
+              "timedOut": null,
+              "duration": 11394,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Login\ncy.visit(Cypress.env('url') + '/loginpagePractise/#');\ncy.loginToShop(_fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.username, _fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.password, _fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.role, _fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.roleValue);\n// Verify navigation to shop page\ncy.url().should('include', 'shop');\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.productName, { timeout: 10000 }).should('have.length', 4);\n// Add products to cart\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.productName).each(($el, index, $list) => {\n    const productName = $el.text();\n    if (_fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.products.some(product => productName.includes(product))) {\n        cy.wrap($el).parents(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.productCard).find(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.productButton).should('be.visible').click();\n    }\n});\n// Navigate to checkout\ncy.contains('Checkout').click();\n// Calculate and verify total price\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.cartTable, { timeout: 10000 }).should('be.visible');\nlet totalPrice = 0;\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.cartPrice).each(($priceElement) => {\n    const priceText = $priceElement.text().trim();\n    const price = parseInt(priceText.replace(/[^\\d]/g, ''));\n    totalPrice += price;\n    cy.log(`Individual Price: ₹${price}`);\n}).then(() => {\n    cy.log(`Calculated Total: ₹${totalPrice}`);\n    // Verify calculated total matches displayed total\n    cy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.totalAmount).should('be.visible').invoke('text').then((displayedTotal) => {\n        const expectedTotal = parseInt(displayedTotal.trim().replace(/[^\\d]/g, ''));\n        cy.log(`Expected Total: ₹${expectedTotal}`);\n        expect(totalPrice).to.equal(expectedTotal, 'Sum of individual prices should match the total');\n    });\n});\n// Proceed to final checkout\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.cartCheckoutButton).should('be.visible').click();\n// Select country from dropdown\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.countryInput, { timeout: 8000 }).should('be.visible').type(_fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.country);\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.countryDropdown, { timeout: 8000 }).should('be.visible');\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.countryDropdown).each(($el, index, $list) => {\n    if ($el.text() === _fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.countryName) {\n        cy.wrap($el).click();\n        return false;\n    }\n});\n// Accept terms and complete purchase\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.agreementCheckbox).check({ force: true }).should('be.checked');\ncy.contains(_fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.purchaseButton).should('be.visible').click();\n// Verify success message\ncy.get(_support_pageObjects_products_json__WEBPACK_IMPORTED_MODULE_1__.successMessage, { timeout: 8000 })\n    .should('be.visible')\n    .and('contain.text', _fixtures_example_json__WEBPACK_IMPORTED_MODULE_0__.successMessage);",
+              "err": {},
+              "uuid": "685cd567-d334-4f5e-8d82-b3ce7d8ccc52",
+              "parentUUID": "70c8ff01-283a-4472-8b18-2996e841e5e5",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "685cd567-d334-4f5e-8d82-b3ce7d8ccc52"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 11394,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports/.jsons",
+        "charts": true,
+        "reportPageTitle": "Cypress Test Report",
+        "embeddedScreenshots": true,
+        "inlineAssets": true,
+        "saveAllAttempts": false,
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.3.2"
+    }
+  }
+}
