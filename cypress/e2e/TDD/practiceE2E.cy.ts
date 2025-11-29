@@ -1,5 +1,5 @@
-import testdata from '../fixtures/example.json'
-import products from '../support/pageObjects/products.json'
+import testdata from '../../fixtures/example.json'
+import products from '../../support/pageObjects/products.json'
 
 describe('End to End E-commerce Flow Test Suite', () => {
 

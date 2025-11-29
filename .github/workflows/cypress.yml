@@ -9,9 +9,9 @@ on:
         type: choice
         options:
           - 'All Tests'
-          - 'cypress/e2e/Test1.cy.ts'
-          - 'cypress/e2e/Test2.cy.ts'
-          - 'cypress/e2e/practiceE2E.cy.ts'
+          - 'cypress/e2e/TDD/Test1.cy.ts'
+          - 'cypress/e2e/TDD/Test2.cy.ts'
+          - 'cypress/e2e/TDD/practiceE2E.cy.ts'
         default: 'All Tests'
       browser:
         description: 'Browser to use'

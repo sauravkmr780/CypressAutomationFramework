@@ -1,4 +1,4 @@
-import selectors from '../support/pageObjects/selectors.json'
+import selectors from '../../support/pageObjects/selectors.json'
 
 describe('My First Test Suite', () => {
     beforeEach(() => {
