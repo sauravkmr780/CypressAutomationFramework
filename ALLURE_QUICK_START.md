@@ -55,9 +55,44 @@ npm run test:all:reports
 
 # Then open each:
 npm run open:report              # Mochawesome (TDD)
-npm run open:bdd:report          # Cucumber (BDD)
-npm run open:allure:report       # Allure (Unified)
+npm run open:allure:report       # Allure (Unified) - Local server
 ```
+
+**Or view Allure on GitHub Pages (after CI runs):**
+```
+https://sauravkmr780.github.io/CypressAutomationFramework/
+```
+
+---
+
+## 🌐 GitHub Pages - Live Allure Reports
+
+**Your Allure reports are automatically published to GitHub Pages!**
+
+**Live Report URL:**
+```
+https://sauravkmr780.github.io/CypressAutomationFramework/
+```
+
+**How it works:**
+1. Every GitHub Actions workflow run generates Allure report
+2. `simple-elf/allure-report-action` creates report with history
+3. Report deployed to `gh-pages` branch automatically
+4. View directly in browser - no download needed!
+
+**Features:**
+- ✅ Last 20 test runs with historical trends
+- ✅ Automatic updates on every push/PR
+- ✅ No local server needed for CI reports
+- ✅ Share URL with team/stakeholders
+- ✅ PR comments with report links
+
+**Setup (One-Time):**
+1. Go to: Settings → Pages
+2. Source: Deploy from branch
+3. Branch: `gh-pages` → `/` (root)
+4. Save
+5. Wait 2-3 minutes for deployment
 
 ---
 

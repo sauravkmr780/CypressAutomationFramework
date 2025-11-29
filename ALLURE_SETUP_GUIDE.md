@@ -967,6 +967,51 @@ If you try to open `allure-report/index.html` directly:
 - `npm run test:all:reports` - Generate all three reports
 - `npm run open:allure:report` - Open Allure report server
 
+### GitHub Actions Integration ✅
+
+**Allure reports are automatically deployed to GitHub Pages after every workflow run!**
+
+**Live Report URL:**
+```
+https://sauravkmr780.github.io/CypressAutomationFramework/
+```
+
+**Features:**
+- ✅ **No Download Needed** - View directly in browser
+- ✅ **Historical Trends** - Last 20 test runs with graphs
+- ✅ **Automatic Deployment** - Updates on every push/PR
+- ✅ **PR Comments** - Automatic report links in pull requests
+- ✅ **Persistent History** - Trends tracked across runs
+
+**GitHub Actions Workflow:**
+```yaml
+- Generate Allure Report with history
+  uses: simple-elf/allure-report-action@master
+  with:
+    allure_results: allure-results
+    allure_history: allure-history
+    keep_reports: 20
+
+- Deploy to GitHub Pages
+  uses: peaceiris/actions-gh-pages@v3
+  with:
+    publish_dir: allure-history
+    publish_branch: gh-pages
+```
+
+**Setup Instructions (One-Time):**
+1. Go to: `https://github.com/sauravkmr780/CypressAutomationFramework/settings/pages`
+2. **Source:** Deploy from a branch
+3. **Branch:** `gh-pages` → `/` (root)
+4. Click **Save**
+5. Wait 2-3 minutes for first deployment
+6. Access report at: `https://sauravkmr780.github.io/CypressAutomationFramework/`
+
+**Workflow Artifacts (30-day retention):**
+- `mochawesome-report` - TDD HTML report (downloadable)
+- `allure-results` - Raw Allure JSON data
+- `allure-report` - Allure HTML (also on GitHub Pages)
+
 ### Triple Reporting Active ✅
 
 1. **Mochawesome** → TDD technical details (static HTML)
@@ -975,16 +1020,27 @@ If you try to open `allure-report/index.html` directly:
 
 ### Server Information
 
+**Local Development:**
 - **Report URL:** `http://127.0.0.1:<random-port>`
 - **Server:** Allure's built-in Jetty server
 - **Lifecycle:** Starts with `npx allure open`, stops when terminal closes
 - **Why needed:** Allure uses AJAX for dynamic data loading (requires HTTP)
 
+**GitHub Pages (CI/CD):**
+- **Report URL:** `https://sauravkmr780.github.io/CypressAutomationFramework/`
+- **Server:** GitHub Pages static hosting
+- **Updates:** Automatic on every workflow run
+- **History:** Last 20 reports with trends
+
 ---
 
-**Allure Report Location:** `allure-report/` (must be served via HTTP)  
-**Allure Results:** `allure-results/*.json`  
-**Report Server:** Auto-starts at `http://127.0.0.1:<port>` when you run `npm run open:allure:report`
+**Local Report Location:** `allure-report/` (must be served via HTTP)  
+**Local Results:** `allure-results/*.json`  
+**Local Server:** Auto-starts at `http://127.0.0.1:<port>` with `npm run open:allure:report`
+
+**GitHub Pages Report:** `https://sauravkmr780.github.io/CypressAutomationFramework/`  
+**GitHub Pages Branch:** `gh-pages`  
+**GitHub Pages Deployment:** Automatic via GitHub Actions
 
 ---
 

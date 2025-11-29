@@ -1,7 +1,7 @@
 import testdata from '../fixtures/example.json'
 import products from '../support/pageObjects/products.json'
 
-describe('Automation Practice Test Suite', () => {
+describe('End to End E-commerce Flow Test Suite', () => {
 
     it('Validate e-commerce page e2e flow', () => {
         // Login

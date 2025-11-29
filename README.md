@@ -633,9 +633,11 @@ For detailed reporting setup, configuration, and troubleshooting, see:
 - ✅ **Multi-Test Support** - Run TDD, BDD, or specific test files
 - ✅ **Tag-Based Execution** - Run smoke tests or full regression suite
 - ✅ **Multi-Browser Testing** - Chrome, Firefox, Edge support
-- ✅ **Dual Report Generation** - Both Mochawesome and Cucumber reports
+- ✅ **Dual Report Generation** - Both Mochawesome and Allure reports
+- ✅ **GitHub Pages Deployment** - Allure reports published automatically
 - ✅ **Artifact Upload** - Reports, screenshots, videos (30-day retention)
-- ✅ **Parallel Execution** - Support for parallel test runs
+- ✅ **Historical Tracking** - Last 20 Allure reports with trends
+- ✅ **PR Comments** - Automatic report links on pull requests
 - ✅ **Environment Variables** - Configurable base URLs and credentials
 
 **Manual Workflow Dispatch:**
@@ -655,31 +657,54 @@ jobs:
   cypress-run:
     - Install dependencies
     - Run Cypress tests (TDD or BDD)
-    - Generate reports (Mochawesome or Cucumber)
+    - Generate Mochawesome report
+    - Generate Allure report with history (last 20 runs)
+    - Deploy Allure to GitHub Pages (gh-pages branch)
+    - Deploy Mochawesome to GitHub Pages (gh-pages-mochawesome branch)
     - Upload artifacts (reports, screenshots, videos)
-    - Post results as PR comment (optional)
+    - Post report links as PR comment (optional)
 ```
 
-**View Results:**
-- ✅ Workflow status in Actions tab with detailed logs
-- ✅ Download artifacts: Reports, screenshots, videos
-- ✅ GitHub Pages deployment (optional)
-- ✅ Slack/Email notifications (configurable)
+**View Reports After Workflow:**
+
+**Allure Report (Live):**
+```
+https://sauravkmr780.github.io/CypressAutomationFramework/
+```
+- Interactive dashboard with historical trends
+- Last 20 test runs with graphs
+- No download needed - view directly in browser
+
+**Mochawesome Report (Artifacts):**
+- Download from workflow artifacts
+- Available for 30 days
+
+**Setup GitHub Pages (One-Time):**
+1. Go to: Settings → Pages
+2. Source: Deploy from a branch
+3. Branch: `gh-pages` → `/` (root)
+4. Save
+
+After enabling, every workflow run automatically updates the Allure report at the URL above.
 
 **Example Workflow Commands:**
 ```yaml
-# TDD smoke tests
-npm run test:smoke
-
-# BDD smoke tests  
-npm run test:bdd:smoke
-
-# All TDD tests
+# TDD tests with Allure
 npm run cypress:run
 
-# All BDD tests
-npm run test:bdd:all
+# Specific test file
+npx cypress run --spec "cypress/e2e/Test1.cy.ts"
+
+# Generate Mochawesome report
+npm run generate:report
+
+# Generate Allure report with history
+# (handled by simple-elf/allure-report-action in CI)
 ```
+
+**GitHub Pages URLs:**
+- **Allure Report:** `https://sauravkmr780.github.io/CypressAutomationFramework/`
+- **Mochawesome Report:** Available as downloadable artifact (30-day retention)
 
 ---
 
