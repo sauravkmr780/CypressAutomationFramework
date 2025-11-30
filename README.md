@@ -75,8 +75,11 @@ Before running tests locally and in CI/CD, complete these steps:
 - ✅ **TypeScript Support** - Full TypeScript integration for type safety and better IDE support
 - ✅ **BDD with Cucumber** - Gherkin syntax with step definitions for behavior-driven development
 - ✅ **Tag-Based Execution** - Run specific test subsets using @smoke, @regression, or custom tags
+- ✅ **Azure SQL Database Integration** - Direct database testing with CRUD operations and validation
+- ✅ **Excel File Validation** - Read and validate Excel files (.xlsx, .xls, .csv) with multiple sheets
+- ✅ **API Testing** - REST API validation with cy.request and cy.intercept
 - ✅ **Page Object Model** - Centralized selectors in JSON files for better maintainability
-- ✅ **Custom Commands** - Reusable custom commands (login, date picker selection)
+- ✅ **Custom Commands** - Reusable custom commands (login, date picker selection, API authentication)
 
 ### 📊 Reporting & Analytics
 - ✅ **Triple Reporting System** - Enterprise-grade reporting for all needs
@@ -176,6 +179,7 @@ CypressAutomationFramework/
 ├── .gitignore                                  # Excludes node_modules, .env, reports
 ├── REPORTING_SETUP_GUIDE.md                    # Reporting configuration guide
 ├── DATABASE_SETUP_GUIDE.md                     # Azure SQL database integration guide
+├── EXCEL_SETUP_GUIDE.md                        # Excel file validation setup guide
 ├── DB_QUICK_REFERENCE.md                       # Quick reference for database commands
 ├── AZURE_SQL_SETUP_SUMMARY.md                  # Database setup summary
 ├── GitHub_Actions_Setup_Guide.md               # Complete CI/CD workflow guide
@@ -223,9 +227,13 @@ npm install
 - `cypress-iframe@1.0.1` - iframe support
 - `@types/node@20.0.0` - Node.js type definitions
 - `mssql@12.1.1` - Microsoft SQL Server client
+- `xlsx@0.18.5` - Excel file reading and validation
 - `cypress-sql-server@1.0.0` - Cypress SQL Server wrapper
 - `dotenv@17.2.3` - Environment variables management
+- `papaparse@5.5.3` - CSV parsing for download validation
 - `@types/mssql@9.1.8` - TypeScript types for MSSQL
+- `@types/xlsx@0.0.35` - TypeScript types for xlsx
+- `@types/papaparse@5.5.0` - TypeScript types for papaparse
 
 ---
 
@@ -259,6 +267,21 @@ npm run test:smoke:headed
 npx cypress run --spec "cypress/e2e/TDD/Test1.cy.ts"
 npx cypress run --spec "cypress/e2e/TDD/Test2.cy.ts"
 npx cypress run --spec "cypress/e2e/TDD/practiceE2E.cy.ts"
+```
+
+**Run Excel Validation Tests:**
+```bash
+# Run Excel tests with Mochawesome report (auto-opens)
+npm run test:excel:report
+
+# Run Excel tests with Allure report
+npm run test:excel:allure
+
+# Run only @smoke Excel test
+npm run test:excel:smoke
+
+# Generate sample Excel file
+npm run generate:excel
 ```
 
 ---
@@ -453,9 +476,12 @@ And Validate the total price limit
 
 | Test Type | Test Files | Total Tests/Scenarios | Smoke Tests | Applications |
 |-----------|------------|----------------------|-------------|--------------|
-| **TDD** | 3 files | 19 tests | 4 @smoke | 3 apps |
+| **TDD** | 10 files | 39 tests | 5 @smoke | 3 apps + 1 DB |
 | **BDD** | 2 features | 2 scenarios | 1 @smoke | 1 app |
-| **Total** | 5 files | 21 tests | 5 smoke | 3 apps |
+| **API** | 3 files | Included in TDD | - | REST APIs |
+| **Database** | 3 files | 12 tests | - | Azure SQL |
+| **Excel** | 1 file | 8 tests | 1 @smoke | Excel Files |
+| **Total** | 16 files | 41 tests | 6 smoke | Multiple |
 
 ---
 
@@ -1508,38 +1534,35 @@ This project is licensed under the ISC License.
 ## 📊 Project Statistics
 
 ### Test Coverage
-- **Total Test Files:** 9 (7 TDD + 2 BDD)
-- **Total Tests/Scenarios:** 31 (27 TDD + 4 BDD)
-- **Smoke Tests:** 5 (@smoke tagged)
-- **Database Tests:** 13 (Employees table validation)
-- **API Tests:** 6 (GET/POST endpoints)
-- **UI Tests:** 12 (Web interactions)
-- **Applications Under Test:** 3
-
-### Test Files Breakdown
-- **E-commerce Tests:** Test1.cy.ts (6 tests)
-- **Practice Tests:** Test2.cy.ts (12 tests)
-- **End-to-End Flow:** practiceE2E.cy.ts (1 test)
-- **API Tests:** GETApiValidation.cy.ts, POSTAPIValidation.cy.ts, loginAPI.cy.ts (6 tests)
-- **Database Tests:** EmployeesDBTest.cy.ts, DBConnectionTest.cy.ts, AdvancedDBValidation.cy.ts (13 tests)
-- **BDD Features:** ecommerce.feature, ecommerceShop.feature (4 scenarios)
+- **Total Test Files:** 16 (10 TDD + 2 BDD + 3 DB + 1 Excel)
+- **Total Tests/Scenarios:** 41 (39 TDD + 2 BDD)
+- **Smoke Tests:** 6 (@smoke tagged)
+- **Applications Under Test:** 3 web apps + Azure SQL Database + Excel files
+- **API Tests:** 3 files (GET/POST validation, JWT authentication)
+- **Database Tests:** 3 files (12 tests covering CRUD operations)
+- **Excel Tests:** 1 file (8 tests covering multiple sheets)
 
 ### Framework Components
-- **Custom Commands:** 5+ including `cy.loginToShop`, `cy.selectDate`, `cy.dbQuery`, `cy.dbInsert`, `cy.dbUpdate`, `cy.dbDelete`, `cy.dbExecuteProc`
+- **Custom Commands:** 3 (`cy.loginToShop`, `cy.selectDate`, `cy.loginAPI`)
+- **Database Tasks:** 5 (dbQuery, dbInsert, dbUpdate, dbDelete, dbExecuteProc)
+- **Excel Tasks:** 3 (readExcel, readExcelSheetNames, readExcelAllSheets)
 - **Page Object Files:** 2 JSON files (products, selectors)
 - **Step Definitions:** 5 BDD steps (1 Given, 3 When, 1 Then)
-- **Feature Files:** 2 files
+- **Feature Files:** 2 (ecommerce.feature, ecommerceShop.feature)
 - **Reporting Systems:** 3 (Mochawesome, Cucumber HTML, Allure)
-- **Database Support:** Azure SQL Server integration
 
 ### Technology Stack
 - **Testing Framework:** Cypress 15.6.0
 - **Language:** TypeScript 5.0.0
+- **Database:** Azure SQL Server (mssql@12.1.1)
+- **Excel:** xlsx@0.18.5 for Excel file validation
 - **BDD Support:** Cucumber (Gherkin)
-- **Database:** Azure SQL Server + MSSQL driver
+- **API Testing:** REST APIs with cy.request & cy.intercept
 - **Reporters:** Mochawesome + Cucumber HTML + Allure
 - **Build Tool:** Webpack 5.103.0
-- **CI/CD:** GitHub Actions with GitHub Secrets
+- **Environment Management:** dotenv
+- **Data Parsing:** PapaParse (CSV validation)
+- **CI/CD:** GitHub Actions
 
 ### Browser Support
 - ✅ Chrome (default)
@@ -1552,9 +1575,13 @@ This project is licensed under the ISC License.
 ## 🎯 Key Highlights
 
 ✅ **Dual Testing Approach** - TDD and BDD in single framework  
+✅ **Azure SQL Database Integration** - Direct database testing with CRUD operations  
+✅ **Excel File Validation** - Read and validate Excel files (.xlsx, .xls, .csv)  
+✅ **API Testing** - REST API validation with authentication  
 ✅ **Tag-Based Execution** - Run smoke or regression suites  
 ✅ **Triple Reporting** - Mochawesome + Cucumber HTML + Allure  
 ✅ **Historical Tracking** - Allure provides test trends over time  
+✅ **Environment Security** - Credentials managed via .env files  
 ✅ **Type Safety** - Full TypeScript integration  
 ✅ **CI/CD Ready** - GitHub Actions with manual dispatch  
 ✅ **Production Ready** - Complete documentation and best practices  
@@ -1563,4 +1590,4 @@ This project is licensed under the ISC License.
 
 **Happy Testing! 🚀**
 
-*Last Updated: November 28, 2025*
+*Last Updated: November 30, 2025*
