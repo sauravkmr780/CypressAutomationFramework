@@ -12,6 +12,8 @@ This guide explains how to set up and use Azure SQL Server database integration 
 
 ### 1. Environment Variables
 
+#### Local Development (`.env` file)
+
 Update the `.env` file in the root directory with your Azure SQL Server credentials:
 
 ```env
@@ -22,6 +24,28 @@ DB_NAME=your_database_name
 ```
 
 **Important:** The `.env` file is already added to `.gitignore` to protect your credentials.
+
+#### CI/CD (GitHub Actions)
+
+Since `.env` is not committed to GitHub, you must add database credentials as GitHub Secrets:
+
+1. Go to: **Repository Settings → Secrets and variables → Actions**
+2. Click **"New repository secret"** for each variable:
+   - `DB_SERVER` - Your Azure SQL Server (example: `sauravdbdemo.database.windows.net`)
+   - `DB_USER` - Your database username
+   - `DB_PASSWORD` - Your database password
+   - `DB_NAME` - Your database name
+
+3. The GitHub Actions workflow automatically uses these secrets:
+```yaml
+env:
+  DB_SERVER: ${{ secrets.DB_SERVER }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+```
+
+Without these secrets configured, database tests will fail in GitHub Actions CI/CD.
 
 ### 2. Database Configuration
 

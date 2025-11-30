@@ -10,28 +10,61 @@
 
 ---
 
+## ⚡ Complete Setup Checklist
+
+Before running tests locally and in CI/CD, complete these steps:
+
+### Local Development Setup
+- [ ] Clone repository: `git clone <repo-url>`
+- [ ] Install dependencies: `npm install`
+- [ ] Create `.env` file with database credentials (if using DB tests)
+- [ ] Run tests locally: `npm run cypress:report`
+- [ ] Verify all tests pass before pushing
+
+### GitHub Repository Setup
+- [ ] Create GitHub repository
+- [ ] Push code to main branch
+- [ ] Go to Settings → Secrets and variables → Actions
+- [ ] Add 4 GitHub Secrets (if using database):
+  - [ ] `DB_SERVER`
+  - [ ] `DB_USER`
+  - [ ] `DB_PASSWORD`
+  - [ ] `DB_NAME`
+- [ ] Go to Settings → Pages → Enable GitHub Pages (for Allure reports)
+- [ ] Verify workflow runs successfully
+
+### CI/CD Verification
+- [ ] Push changes and check Actions tab
+- [ ] Confirm workflow runs automatically
+- [ ] Download and review test reports
+- [ ] Check GitHub Pages for Allure reports
+- [ ] Verify database tests pass (if applicable)
+
+---
+
 ## 📋 Table of Contents
 
+- [Setup Checklist](#-complete-setup-checklist)
 - [Features](#-features)
 - [Quick Start](#-quick-start)
 - [Project Structure](#-project-structure)
 - [Installation](#-installation)
 - [Test Execution](#-test-execution)
-  - [TDD Tests](#tdd-tests-traditional-cypress)
-  - [BDD Tests](#bdd-tests-cucumber-gherkin)
-  - [Tag-Based Execution](#tag-based-execution)
 - [Test Suites](#-test-suites)
+- [Database Testing](#-database-testing-azure-sql-server)
 - [Reporting](#-reporting)
-  - [Mochawesome Reports (TDD)](#mochawesome-reports-tdd)
-  - [Cucumber HTML Reports (BDD)](#cucumber-html-reports-bdd)
-  - [Allure Reports (Unified TDD+BDD)](#allure-reports-unified-tddbdd)
 - [Custom Commands](#-custom-commands)
 - [Page Object Model](#-page-object-model)
 - [CI/CD Integration](#-cicd-integration)
 - [Configuration](#-configuration)
 - [Best Practices](#-best-practices)
 - [Troubleshooting](#-troubleshooting)
+- [Project Statistics](#-project-statistics)
 - [Author](#-author)
+
+---
+
+## 🚀 Quick Start
 
 ---
 
@@ -92,6 +125,7 @@ Reports will auto-generate and open in your default browser! 🎉
 
 ```
 CypressAutomationFramework/
+├── .env                                        # Database credentials (NOT committed - in .gitignore)
 ├── .github/
 │   └── workflows/
 │       └── cypress.yml                          # GitHub Actions CI/CD workflow
@@ -103,7 +137,11 @@ CypressAutomationFramework/
 │   │   │   ├── practiceE2E.cy.ts               # TDD: End-to-end flow test
 │   │   │   ├── GETApiValidation.cy.ts          # TDD: GET API tests
 │   │   │   ├── POSTAPIValidation.cy.ts         # TDD: POST API tests
-│   │   │   └── loginAPI.cy.ts                  # TDD: API login and e-commerce flow
+│   │   │   ├── loginAPI.cy.ts                  # TDD: API login and e-commerce flow
+│   │   │   ├── EmployeesDBTest.cy.ts           # TDD: Azure SQL database tests
+│   │   │   ├── DBConnectionTest.cy.ts          # TDD: Database connection validation
+│   │   │   ├── AdvancedDBValidation.cy.ts      # TDD: Advanced database queries
+│   │   │   └── DBValidation.cy.ts              # TDD: Example database tests
 │   │   └── BDD/
 │   │       ├── ecommerce.feature               # BDD: Feature file with Gherkin syntax
 │   │       ├── ecommerceShop.feature           # BDD: Additional feature file
@@ -121,16 +159,28 @@ CypressAutomationFramework/
 │   ├── support/
 │   │   ├── commands.ts                         # Custom Cypress commands
 │   │   ├── e2e.ts                              # Global config + tag filtering
+│   │   ├── db/
+│   │   │   ├── dbConfig.ts                     # Database connection config
+│   │   │   └── dbHelper.ts                     # Database helper functions
 │   │   └── pageObjects/
 │   │       ├── products.json                   # Product page selectors
 │   │       └── selectors.json                  # Practice page selectors
 │   └── videos/                                 # Test execution videos
+├── allure-results/                             # Allure test results (auto-generated)
+├── allure-report/                              # Allure HTML report (auto-generated)
 ├── .cypress-cucumber-preprocessorrc.json       # Cucumber preprocessor config
 ├── cucumber-report.js                          # BDD report generator script
-├── cypress.config.js                           # Cypress + reporters config
+├── cypress.config.js                           # Cypress + reporters + database config
 ├── package.json                                # Dependencies and NPM scripts
 ├── tsconfig.json                               # TypeScript configuration
-├── REPORTING_SETUP_GUIDE.md                    # Complete reporting documentation
+├── .gitignore                                  # Excludes node_modules, .env, reports
+├── REPORTING_SETUP_GUIDE.md                    # Reporting configuration guide
+├── DATABASE_SETUP_GUIDE.md                     # Azure SQL database integration guide
+├── DB_QUICK_REFERENCE.md                       # Quick reference for database commands
+├── AZURE_SQL_SETUP_SUMMARY.md                  # Database setup summary
+├── GitHub_Actions_Setup_Guide.md               # Complete CI/CD workflow guide
+├── ALLURE_SETUP_GUIDE.md                       # Allure reporter configuration guide
+├── ALLURE_QUICK_START.md                       # Quick start for Allure commands
 └── README.md                                   # This file
 ```
 
@@ -172,6 +222,10 @@ npm install
 - `webpack@5.103.0` - Module bundler
 - `cypress-iframe@1.0.1` - iframe support
 - `@types/node@20.0.0` - Node.js type definitions
+- `mssql@12.1.1` - Microsoft SQL Server client
+- `cypress-sql-server@1.0.0` - Cypress SQL Server wrapper
+- `dotenv@17.2.3` - Environment variables management
+- `@types/mssql@9.1.8` - TypeScript types for MSSQL
 
 ---
 
@@ -714,6 +768,39 @@ npm run generate:report
 
 ## ⚙️ Configuration
 
+### Database Credentials & GitHub Secrets
+
+**For Local Testing (`.env` file):**
+```env
+DB_SERVER=your-server.database.windows.net
+DB_USER=your-username
+DB_PASSWORD=your-password
+DB_NAME=your-database-name
+```
+
+**For CI/CD (GitHub Actions):**
+Since `.env` is in `.gitignore`, GitHub Actions won't have access to these credentials. You must add them as GitHub Secrets:
+
+1. Go to: **Repository → Settings → Secrets and variables → Actions**
+2. Click **"New repository secret"** and add:
+   - `DB_SERVER` - Your Azure SQL Server name
+   - `DB_USER` - Your database username
+   - `DB_PASSWORD` - Your database password
+   - `DB_NAME` - Your database name
+
+3. The workflow automatically uses these secrets via environment variables:
+```yaml
+env:
+  DB_SERVER: ${{ secrets.DB_SERVER }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+```
+
+**Note:** Never commit `.env` file to GitHub - it's already in `.gitignore` for security.
+
+---
+
 ### Cypress Configuration (`cypress.config.js`)
 
 ```javascript
@@ -849,6 +936,49 @@ env: {
 cy.visit(Cypress.env('url') + '/seleniumPractise/')
 ```
 
+**Azure SQL Database Configuration:**
+
+Create a `.env` file in the project root (automatically gitignored):
+
+```env
+DB_SERVER=sauravdbdemo.database.windows.net
+DB_USER=skdblogin
+DB_PASSWORD=@1Infosys
+DB_NAME=PracticeDBSetup
+```
+
+**Database Tasks Available:**
+
+```typescript
+// Query database (SELECT)
+cy.task('dbQuery', 'SELECT * FROM Employees').then((rows) => {
+  cy.log(JSON.stringify(rows))
+})
+
+// Insert data
+cy.task('dbInsert', {
+  table: 'Employees',
+  data: {
+    FullName: 'Test User',
+    Department: 'QA',
+    Salary: 75000
+  }
+})
+
+// Update data
+cy.task('dbUpdate', {
+  table: 'Employees',
+  data: { Salary: 80000 },
+  where: "FullName = 'Test User'"
+})
+
+// Delete data
+cy.task('dbDelete', {
+  table: 'Employees',
+  where: "FullName = 'Test User'"
+})
+```
+
 **Command Line:**
 ```bash
 # Override base URL
@@ -886,6 +1016,12 @@ npx cypress run --env tags=@smoke          # BDD tags
   "test:bdd:smoke": "npm run clean:reports && cypress run --spec 'cypress/e2e/BDD/**/*.feature' --env tags=@smoke && npm run generate:cucumber:report",
   "test:bdd:smoke:report": "npm run clean:reports && cypress run --spec 'cypress/e2e/BDD/**/*.feature' --env tags=@smoke && npm run generate:cucumber:report && start cypress\\reports\\cucumber-html\\index.html",
   
+  "test:db": "npm run clean:reports && cypress run --spec 'cypress/e2e/TDD/EmployeesDBTest.cy.ts' && npm run generate:report",
+  "test:db:report": "npm run clean:reports && cypress run --spec 'cypress/e2e/TDD/EmployeesDBTest.cy.ts' && npm run generate:report && start cypress\\reports\\html\\index.html",
+  "test:db:allure": "npm run clean:allure && cypress run --spec 'cypress/e2e/TDD/EmployeesDBTest.cy.ts' && npm run generate:allure:report && npm run open:allure:report",
+  "test:db:advanced": "npm run clean:reports && cypress run --spec 'cypress/e2e/TDD/AdvancedDBValidation.cy.ts' && npm run generate:report && start cypress\\reports\\html\\index.html",
+  "test:db:all": "npm run clean:reports && cypress run --spec 'cypress/e2e/TDD/EmployeesDBTest.cy.ts,cypress/e2e/TDD/AdvancedDBValidation.cy.ts,cypress/e2e/TDD/DBConnectionTest.cy.ts' && npm run generate:report && start cypress\\reports\\html\\index.html",
+  
   "open:report": "start cypress\\reports\\html\\index.html",
   "open:bdd:report": "start cypress\\reports\\cucumber-html\\index.html"
 }
@@ -893,7 +1029,115 @@ npx cypress run --env tags=@smoke          # BDD tags
 
 ---
 
-## 🎯 Custom Commands
+## 🗄️ Database Testing (Azure SQL Server)
+
+### Database Integration
+
+This framework includes built-in Azure SQL Server integration for database validation tests.
+
+**Quick Start:**
+```bash
+# Run database tests with report
+npm run test:db:report
+
+# Run database tests with Allure
+npm run test:db:allure
+
+# Run specific database test file
+npx cypress run --spec "cypress/e2e/TDD/EmployeesDBTest.cy.ts"
+```
+
+### Available Database Commands
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `cy.dbQuery(sql)` | Execute SELECT queries | `cy.dbQuery('SELECT * FROM Employees')` |
+| `cy.dbInsert(table, data)` | Insert records | `cy.dbInsert('Employees', {FullName: 'John', Dept: 'QA'})` |
+| `cy.dbUpdate(table, data, where)` | Update records | `cy.dbUpdate('Employees', {Salary: 85000}, "Id = 1")` |
+| `cy.dbDelete(table, where)` | Delete records | `cy.dbDelete('Employees', "Id = 5")` |
+| `cy.dbExecuteProc(name, params)` | Execute stored procedures | `cy.dbExecuteProc('sp_GetUsers', ['Admin'])` |
+
+### Database Configuration
+
+**Local Setup:**
+1. Update `.env` with your Azure SQL Server credentials:
+```env
+DB_SERVER=your-server.database.windows.net
+DB_USER=your-username
+DB_PASSWORD=your-password
+DB_NAME=your-database
+```
+
+2. Run tests locally: `npm run test:db:report`
+
+**GitHub Actions Setup:**
+1. Add 4 GitHub Secrets (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME)
+2. Tests run automatically on push or manual trigger
+3. Database validation happens in CI/CD pipeline
+
+### Example Database Test
+
+```typescript
+describe('Employee Database Tests', () => {
+  it('should retrieve and validate employee data', () => {
+    cy.dbQuery('SELECT * FROM Employees WHERE FullName = "Saurav Kumar"')
+      .then((results) => {
+        expect(results).to.have.length(1);
+        expect(results[0].Department).to.equal('QA Automation');
+        expect(results[0].Salary).to.equal(82000);
+      });
+  });
+  
+  it('should insert and verify new employee', () => {
+    cy.dbInsert('Employees', {
+      FullName: 'Test User',
+      Department: 'Testing',
+      Salary: 75000
+    });
+    
+    cy.dbQuery('SELECT * FROM Employees WHERE FullName = "Test User"')
+      .then((results) => {
+        expect(results[0].Salary).to.equal(75000);
+        
+        // Cleanup
+        cy.dbDelete('Employees', "FullName = 'Test User'");
+      });
+  });
+});
+```
+
+### Real-World Use Case
+
+```typescript
+describe('UI vs Database Validation', () => {
+  it('should verify UI displays correct data from database', () => {
+    // Get employee from database
+    cy.dbQuery('SELECT * FROM Employees WHERE Id = 1')
+      .then((dbEmployee) => {
+        const employee = dbEmployee[0];
+        
+        // Navigate to employee profile
+        cy.visit('https://yourapp.com/employee/1');
+        
+        // Verify UI matches database
+        cy.get('.employee-name').should('contain', employee.FullName);
+        cy.get('.employee-salary').should('contain', employee.Salary);
+        cy.get('.employee-dept').should('contain', employee.Department);
+      });
+  });
+});
+```
+
+### Test Suites Included
+
+- **EmployeesDBTest.cy.ts** - Basic CRUD operations (Insert, Read, Update, Delete)
+- **DBConnectionTest.cy.ts** - Connection validation and simple queries
+- **AdvancedDBValidation.cy.ts** - Complex queries, joins, aggregations
+- **DBValidation.cy.ts** - Example template for custom database tests
+
+For complete database documentation, see: **[DATABASE_SETUP_GUIDE.md](./DATABASE_SETUP_GUIDE.md)**
+
+---
 
 ### Available Custom Commands
 
@@ -913,7 +1157,29 @@ cy.loginToShop(username, password, role, roleValue)
 cy.loginToShop('rahulshettyacademy', 'learning', 'Teacher', 'teach')
 ```
 
-#### 2. `cy.selectDate()`
+#### 2. `cy.loginAPI()`
+
+API-based login that returns JWT token for authentication.
+
+**Usage:**
+
+```typescript
+cy.loginAPI().then(() => {
+  cy.visit('/client', {
+    onBeforeLoad: (window) => {
+      window.localStorage.setItem('token', Cypress.env('token'))
+    }
+  })
+})
+```
+
+**Example:**
+
+```typescript
+cy.loginAPI() // Token stored in Cypress.env('token')
+```
+
+#### 3. `cy.selectDate()`
 
 Select date from React date picker component.
 
@@ -1242,25 +1508,38 @@ This project is licensed under the ISC License.
 ## 📊 Project Statistics
 
 ### Test Coverage
-- **Total Test Files:** 4 (3 TDD + 1 BDD)
-- **Total Tests/Scenarios:** 21 (19 TDD + 2 BDD)
+- **Total Test Files:** 9 (7 TDD + 2 BDD)
+- **Total Tests/Scenarios:** 31 (27 TDD + 4 BDD)
 - **Smoke Tests:** 5 (@smoke tagged)
+- **Database Tests:** 13 (Employees table validation)
+- **API Tests:** 6 (GET/POST endpoints)
+- **UI Tests:** 12 (Web interactions)
 - **Applications Under Test:** 3
 
+### Test Files Breakdown
+- **E-commerce Tests:** Test1.cy.ts (6 tests)
+- **Practice Tests:** Test2.cy.ts (12 tests)
+- **End-to-End Flow:** practiceE2E.cy.ts (1 test)
+- **API Tests:** GETApiValidation.cy.ts, POSTAPIValidation.cy.ts, loginAPI.cy.ts (6 tests)
+- **Database Tests:** EmployeesDBTest.cy.ts, DBConnectionTest.cy.ts, AdvancedDBValidation.cy.ts (13 tests)
+- **BDD Features:** ecommerce.feature, ecommerceShop.feature (4 scenarios)
+
 ### Framework Components
-- **Custom Commands:** 2 (`cy.loginToShop`, `cy.selectDate`)
+- **Custom Commands:** 5+ including `cy.loginToShop`, `cy.selectDate`, `cy.dbQuery`, `cy.dbInsert`, `cy.dbUpdate`, `cy.dbDelete`, `cy.dbExecuteProc`
 - **Page Object Files:** 2 JSON files (products, selectors)
 - **Step Definitions:** 5 BDD steps (1 Given, 3 When, 1 Then)
-- **Feature Files:** 1 (ecommerce.feature)
+- **Feature Files:** 2 files
 - **Reporting Systems:** 3 (Mochawesome, Cucumber HTML, Allure)
+- **Database Support:** Azure SQL Server integration
 
 ### Technology Stack
 - **Testing Framework:** Cypress 15.6.0
 - **Language:** TypeScript 5.0.0
 - **BDD Support:** Cucumber (Gherkin)
+- **Database:** Azure SQL Server + MSSQL driver
 - **Reporters:** Mochawesome + Cucumber HTML + Allure
 - **Build Tool:** Webpack 5.103.0
-- **CI/CD:** GitHub Actions
+- **CI/CD:** GitHub Actions with GitHub Secrets
 
 ### Browser Support
 - ✅ Chrome (default)

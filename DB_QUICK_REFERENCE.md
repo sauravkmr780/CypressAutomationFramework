@@ -2,13 +2,23 @@
 
 ## 🔐 Configure Credentials
 
-**File:** `.env`
+### Local Development (`.env`)
 ```env
 DB_SERVER=your-azure-server.database.windows.net
 DB_USER=your_username
 DB_PASSWORD=your_password
 DB_NAME=your_database_name
 ```
+
+### GitHub Actions (Secrets)
+1. Go to: **Repository → Settings → Secrets and variables → Actions**
+2. Add these 4 secrets:
+   - `DB_SERVER`
+   - `DB_USER`
+   - `DB_PASSWORD`
+   - `DB_NAME`
+
+⚠️ **Without GitHub Secrets, database tests will fail in CI/CD!**
 
 ## 🚀 Run Database Tests
 

@@ -8,6 +8,49 @@
 
 ---
 
+## 🚀 GitHub Actions & CI/CD Setup
+
+### Configure GitHub Secrets for Database Tests
+
+For GitHub Actions CI/CD to access your database, you must add credentials as secrets:
+
+1. **Go to:** Repository → Settings → Secrets and variables → Actions
+2. **Click:** "New repository secret"
+3. **Add these secrets:**
+
+| Secret Name | Value | Example |
+|------------|-------|---------|
+| `DB_SERVER` | Your Azure SQL Server | `sauravdbdemo.database.windows.net` |
+| `DB_USER` | Your database username | `skdblogin` |
+| `DB_PASSWORD` | Your database password | `your_secure_password` |
+| `DB_NAME` | Your database name | `PracticeDBSetup` |
+
+**⚠️ Important:** Without these GitHub Secrets, database tests will fail in CI/CD!
+
+### Verify GitHub Actions Workflow
+
+The workflow in `.github/workflows/cypress.yml` automatically uses these secrets:
+
+```yaml
+env:
+  DB_SERVER: ${{ secrets.DB_SERVER }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+```
+
+### Run Database Tests in GitHub Actions
+
+1. Push code to GitHub repository
+2. Go to: **Actions tab**
+3. Select **"Cypress Tests"** workflow
+4. Click **"Run workflow"** button
+5. Select test type (TDD / BDD / All)
+6. Choose browser (Chrome / Firefox / Edge)
+7. Click **"Run workflow"**
+
+---
+
 ## 📊 Test Results Summary
 
 | Test | Status |

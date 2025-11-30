@@ -238,6 +238,28 @@ https://github.com/yourusername/ClientName-Cypress-Automation.git
 
 **Save this URL** - you'll need it in the next phase.
 
+### Step 3.6: Configure GitHub Secrets (Database Tests Only)
+
+If your project includes database tests, add credentials as GitHub Secrets:
+
+1. Go to: **Settings → Secrets and variables → Actions**
+2. Click **"New repository secret"** for each variable:
+   - `DB_SERVER` - Your Azure SQL Server (example: `your-server.database.windows.net`)
+   - `DB_USER` - Your database username
+   - `DB_PASSWORD` - Your database password
+   - `DB_NAME` - Your database name
+
+**⚠️ Important:** Without these secrets, database tests will fail in CI/CD!
+
+The GitHub Actions workflow automatically uses these secrets:
+```yaml
+env:
+  DB_SERVER: ${{ secrets.DB_SERVER }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+```
+
 ---
 
 ## Phase 4: Connect Local to GitHub
@@ -991,6 +1013,34 @@ env:
 ```
 
 Configure in: Repository → Settings → Secrets
+
+### Q11: How do I run database tests in GitHub Actions?
+
+**Answer:** Add database credentials as GitHub Secrets:
+
+1. **Go to:** Settings → Secrets and variables → Actions
+2. **Add these 4 secrets:**
+   - `DB_SERVER` - Your Azure SQL Server
+   - `DB_USER` - Your database username
+   - `DB_PASSWORD` - Your database password  
+   - `DB_NAME` - Your database name
+
+3. **Update workflow environment variables:**
+```yaml
+env:
+  DB_SERVER: ${{ secrets.DB_SERVER }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+```
+
+4. **Run database tests:**
+```bash
+npx cypress run --spec "cypress/e2e/TDD/*DB*.cy.ts"
+npm run test:db:report
+```
+
+Without GitHub Secrets, database tests will fail in CI/CD!
 
 ---
 
