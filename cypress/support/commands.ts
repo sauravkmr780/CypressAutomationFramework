@@ -19,6 +19,12 @@ declare global {
             selectDate(day: number, month: string, year: number): Chainable<void>
             loginToShop(username: string, password: string, role: string, roleValue: string): Chainable<void>
             loginAPI(): Chainable<string>
+            // Database commands
+            dbQuery(query: string): Chainable<any>
+            dbExecuteProc(procedureName: string, params?: any[]): Chainable<any>
+            dbInsert(table: string, data: any): Chainable<void>
+            dbUpdate(table: string, data: any, where: string): Chainable<void>
+            dbDelete(table: string, where: string): Chainable<void>
         }
     }
 }
@@ -90,5 +96,26 @@ Cypress.Commands.add('loginAPI', () => {
         Cypress.env('token', response.body.token)
     })
 })
+
+// Database commands for Azure SQL Server
+Cypress.Commands.add('dbQuery', (query: string) => {
+    return cy.task('dbQuery', query);
+});
+
+Cypress.Commands.add('dbExecuteProc', (procedureName: string, params?: any[]) => {
+    return cy.task('dbExecuteProc', { procedureName, params });
+});
+
+Cypress.Commands.add('dbInsert', (table: string, data: any) => {
+    return cy.task('dbInsert', { table, data });
+});
+
+Cypress.Commands.add('dbUpdate', (table: string, data: any, where: string) => {
+    return cy.task('dbUpdate', { table, data, where });
+});
+
+Cypress.Commands.add('dbDelete', (table: string, where: string) => {
+    return cy.task('dbDelete', { table, where });
+});
 
 export { }

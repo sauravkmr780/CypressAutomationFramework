@@ -3,6 +3,28 @@ import reporter from 'cypress-mochawesome-reporter/plugin.js';
 import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-preprocessor";
 import webpack from "@cypress/webpack-preprocessor";
 import { configureAllureAdapterPlugins } from '@mmisty/cypress-allure-adapter/plugins';
+import sql from 'mssql';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Azure SQL Server Configuration
+const dbConfig = {
+  server: process.env.DB_SERVER || '',
+  user: process.env.DB_USER || '',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || '',
+  options: {
+    encrypt: true, // Required for Azure SQL
+    trustServerCertificate: false
+  },
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000
+  }
+};
 
 export default defineConfig({
   projectId: "ts6nbs", // Replace with actual projectId from Cypress Cloud
@@ -34,6 +56,83 @@ export default defineConfig({
       
       // Register Cucumber Preprocessor (BDD) - Register LAST
       await addCucumberPreprocessorPlugin(on, config);
+      
+      // Database tasks for Azure SQL Server
+      on('task', {
+        async dbQuery(query) {
+          try {
+            const pool = await sql.connect(dbConfig);
+            const result = await pool.request().query(query);
+            await pool.close();
+            return result.recordset;
+          } catch (error) {
+            console.error('Database query error:', error);
+            throw error;
+          }
+        },
+        
+        async dbExecuteProc({ procedureName, params }) {
+          try {
+            const pool = await sql.connect(dbConfig);
+            const request = pool.request();
+            
+            if (params && Array.isArray(params)) {
+              params.forEach((param, index) => {
+                request.input(`param${index}`, param);
+              });
+            }
+            
+            const result = await request.execute(procedureName);
+            await pool.close();
+            return result.recordset;
+          } catch (error) {
+            console.error('Stored procedure error:', error);
+            throw error;
+          }
+        },
+        
+        async dbInsert({ table, data }) {
+          try {
+            const pool = await sql.connect(dbConfig);
+            const columns = Object.keys(data).join(', ');
+            const values = Object.values(data).map(v => `'${v}'`).join(', ');
+            const query = `INSERT INTO ${table} (${columns}) VALUES (${values})`;
+            await pool.request().query(query);
+            await pool.close();
+            return null;
+          } catch (error) {
+            console.error('Database insert error:', error);
+            throw error;
+          }
+        },
+        
+        async dbUpdate({ table, data, where }) {
+          try {
+            const pool = await sql.connect(dbConfig);
+            const updates = Object.entries(data).map(([key, val]) => `${key} = '${val}'`).join(', ');
+            const query = `UPDATE ${table} SET ${updates} WHERE ${where}`;
+            await pool.request().query(query);
+            await pool.close();
+            return null;
+          } catch (error) {
+            console.error('Database update error:', error);
+            throw error;
+          }
+        },
+        
+        async dbDelete({ table, where }) {
+          try {
+            const pool = await sql.connect(dbConfig);
+            const query = `DELETE FROM ${table} WHERE ${where}`;
+            await pool.request().query(query);
+            await pool.close();
+            return null;
+          } catch (error) {
+            console.error('Database delete error:', error);
+            throw error;
+          }
+        }
+      });
       
       // Webpack configuration for TypeScript and Feature files
       on(
