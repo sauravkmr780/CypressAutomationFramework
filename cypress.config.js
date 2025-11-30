@@ -5,6 +5,7 @@ import webpack from "@cypress/webpack-preprocessor";
 import { configureAllureAdapterPlugins } from '@mmisty/cypress-allure-adapter/plugins';
 import sql from 'mssql';
 import dotenv from 'dotenv';
+import XLSX from 'xlsx';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -129,6 +130,43 @@ export default defineConfig({
             return null;
           } catch (error) {
             console.error('Database delete error:', error);
+            throw error;
+          }
+        },
+        
+        // Excel file reading tasks
+        readExcel({ filePath, sheetName }) {
+          try {
+            const workbook = XLSX.readFile(filePath);
+            const sheet = workbook.Sheets[sheetName || workbook.SheetNames[0]];
+            const data = XLSX.utils.sheet_to_json(sheet);
+            return data;
+          } catch (error) {
+            console.error('Excel read error:', error);
+            throw error;
+          }
+        },
+        
+        readExcelSheetNames(filePath) {
+          try {
+            const workbook = XLSX.readFile(filePath);
+            return workbook.SheetNames;
+          } catch (error) {
+            console.error('Excel sheet names error:', error);
+            throw error;
+          }
+        },
+        
+        readExcelAllSheets(filePath) {
+          try {
+            const workbook = XLSX.readFile(filePath);
+            const allSheets = {};
+            workbook.SheetNames.forEach(sheetName => {
+              allSheets[sheetName] = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+            });
+            return allSheets;
+          } catch (error) {
+            console.error('Excel read all sheets error:', error);
             throw error;
           }
         }
