@@ -76,7 +76,12 @@ Before running tests locally and in CI/CD, complete these steps:
 - ✅ **BDD with Cucumber** - Gherkin syntax with step definitions for behavior-driven development
 - ✅ **Tag-Based Execution** - Run specific test subsets using @smoke, @regression, or custom tags
 - ✅ **Azure SQL Database Integration** - Direct database testing with CRUD operations and validation
-- ✅ **Excel File Validation** - Read and validate Excel files (.xlsx, .xls, .csv) with multiple sheets
+- ✅ **Excel File Operations** - Complete Excel testing capabilities
+  - Read/Write Excel files (.xlsx, .xls, .csv)
+  - Validate data from multiple sheets
+  - E2E Upload-Download workflows (Download → Modify → Upload → Verify)
+  - Dynamic column detection for flexible data handling
+  - Data-driven testing with Excel test data
 - ✅ **API Testing** - REST API validation with cy.request and cy.intercept
 - ✅ **Page Object Model** - Centralized selectors in JSON files for better maintainability
 - ✅ **Custom Commands** - Reusable custom commands (login, date picker selection, API authentication)
@@ -480,8 +485,74 @@ And Validate the total price limit
 | **BDD** | 2 features | 2 scenarios | 1 @smoke | 1 app |
 | **API** | 3 files | Included in TDD | - | REST APIs |
 | **Database** | 3 files | 12 tests | - | Azure SQL |
-| **Excel** | 1 file | 8 tests | 1 @smoke | Excel Files |
-| **Total** | 16 files | 41 tests | 6 smoke | Multiple |
+| **Excel Validation** | 1 file | 8 tests | 1 @smoke | Excel Files |
+| **Excel E2E** | 1 file | 5 tests | 1 @smoke | Upload-Download |
+| **Total** | 17 files | 46 tests | 7 smoke | Multiple |
+
+---
+
+## 🔄 Excel Testing
+
+This framework includes comprehensive Excel file testing capabilities for both validation and end-to-end workflows.
+
+### Excel Validation Tests
+
+**File:** `cypress/e2e/TDD/ExcelValidation.cy.ts`
+
+**Features:**
+- ✅ Read Excel files from fixtures or downloads folder
+- ✅ Validate data from multiple sheets (Employees, Products, TestData)
+- ✅ Data filtering and calculations
+- ✅ Column and row validation
+- ✅ Data type verification
+- ✅ Support for .xlsx, .xls, and .csv formats
+
+**Example:**
+```typescript
+cy.task('readExcel', {
+  filePath: 'cypress/fixtures/employees.xlsx',
+  sheetName: 'Employees'
+}).then((data) => {
+  const rows = data as any[];
+  expect(rows).to.have.length.greaterThan(0);
+  expect(rows[0]).to.have.property('FullName');
+});
+```
+
+### Excel E2E Tests (Upload-Download)
+
+**File:** `cypress/e2e/TDD/ExcelE2E.cy.ts`
+
+**Complete Workflow:**
+1. 📥 **Download** Excel file from application
+2. 📖 **Read** downloaded file with dynamic column detection
+3. ✏️ **Modify** data (e.g., change "Kivi" to "Cherry")
+4. 💾 **Write** modified data to new Excel file
+5. 📤 **Upload** modified file back to application
+6. ✅ **Verify** changes reflected in UI
+
+**Application:** https://rahulshettyacademy.com/upload-download-test/index.html
+
+**Key Features:**
+- Dynamic column name detection (works with any Excel structure)
+- Automatic cleanup of downloads folder
+- File upload with hidden input handling
+- UI verification after upload
+- Complete data integrity checks
+
+**NPM Scripts:**
+```bash
+# Run Excel validation tests
+npm run test:excel:report
+
+# Run Excel E2E tests
+npm run test:excel:e2e:report
+
+# Run Excel smoke tests
+npm run test:excel:e2e:smoke
+```
+
+**📖 Detailed Guide:** See [EXCEL_SETUP_GUIDE.md](./EXCEL_SETUP_GUIDE.md) for complete documentation
 
 ---
 
@@ -1462,12 +1533,49 @@ npm run test:smoke                # TDD smoke tests + report (no open)
 ### BDD Test Execution
 ```bash
 npm run test:bdd:all:report       # All BDD scenarios + report + auto-open
+npm run test:bdd:smoke:report     # BDD smoke scenarios + report + auto-open
+npm run test:bdd:regression:report # BDD regression scenarios + report + auto-open
+```
+
+### Database Tests
+```bash
+npm run test:db:report            # Single DB test + report + auto-open
+npm run test:db:advanced          # Advanced DB test + report + auto-open
+npm run test:db:all               # All DB tests + report + auto-open
+```
+
+### Excel Tests
+```bash
+# Excel Validation Tests
+npm run test:excel:report         # Excel validation tests + report + auto-open
+npm run test:excel:allure         # Excel validation tests + Allure report
+npm run test:excel:smoke          # Excel smoke tests + report + auto-open
+
+# Excel E2E Tests (Upload-Download)
+npm run test:excel:e2e:report     # Excel E2E tests + report + auto-open
+npm run test:excel:e2e:allure     # Excel E2E tests + Allure report
+npm run test:excel:e2e:smoke      # Excel E2E smoke tests + report + auto-open
+
+# Utility
+npm run generate:excel            # Generate sample Excel file
+```
+
+### Allure Reports
+```bash
+npm run allure:report             # TDD + BDD Allure report + auto-open
+npm run test:tdd:allure           # TDD tests + Allure report + auto-open
+npm run test:bdd:allure           # BDD tests + Allure report + auto-open
+npm run test:bdd:smoke:allure     # BDD smoke tests + Allure report
+```
+
 ---
 
 ## 🔗 Useful Resources
 
 ### Framework Documentation
 - 📄 [REPORTING_SETUP_GUIDE.md](./REPORTING_SETUP_GUIDE.md) - Complete reporting setup documentation
+- 📄 [EXCEL_SETUP_GUIDE.md](./EXCEL_SETUP_GUIDE.md) - Complete Excel testing documentation
+- 📄 [DATABASE_SETUP_GUIDE.md](./DATABASE_SETUP_GUIDE.md) - Azure SQL Database setup guide
 - 📁 [GitHub Repository](https://github.com/sauravkmr780/CypressAutomationFramework)
 - ⚡ [GitHub Actions Workflows](https://github.com/sauravkmr780/CypressAutomationFramework/actions)
 
@@ -1477,6 +1585,7 @@ npm run test:bdd:all:report       # All BDD scenarios + report + auto-open
 - [TypeScript Documentation](https://www.typescriptlang.org/)
 - [Cucumber Documentation](https://cucumber.io/docs/cucumber/)
 - [Gherkin Syntax Reference](https://cucumber.io/docs/gherkin/reference/)
+- [XLSX Library Documentation](https://www.npmjs.com/package/xlsx)
 
 ### Plugins & Tools
 - [Mochawesome Reporter](https://github.com/adamgruber/mochawesome)
@@ -1534,11 +1643,12 @@ This project is licensed under the ISC License.
 ## 📊 Project Statistics
 
 ### Test Coverage
-- **Total Test Files:** 16 (10 TDD + 2 BDD + 3 DB + 1 Excel)
-- **Total Tests/Scenarios:** 41 (39 TDD + 2 BDD)
-- **Smoke Tests:** 6 (@smoke tagged)
-- **Applications Under Test:** 3 web apps + Azure SQL Database + Excel files
+- **Total Test Files:** 17 (10 TDD + 2 BDD + 3 DB + 2 Excel)
+- **Total Tests/Scenarios:** 46 (39 TDD + 2 BDD + 5 Excel E2E)
+- **Smoke Tests:** 7 (@smoke tagged)
+- **Applications Under Test:** 4 web apps + Azure SQL Database + Excel files
 - **API Tests:** 3 files (GET/POST validation, JWT authentication)
+- **Excel Tests:** 2 files (8 validation tests + 5 E2E upload-download tests)
 - **Database Tests:** 3 files (12 tests covering CRUD operations)
 - **Excel Tests:** 1 file (8 tests covering multiple sheets)
 
