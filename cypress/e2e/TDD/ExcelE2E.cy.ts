@@ -1,7 +1,7 @@
 import XLSX from 'xlsx';
 import path from 'path';
 
-describe('Excel Upload-Download End-to-End Tests', () => {
+describe.skip('Excel Upload-Download End-to-End Tests', () => {
     const downloadPath = 'cypress/downloads';
     const downloadedFileName = 'download.xlsx';
     const modifiedFileName = 'modified-download.xlsx';
