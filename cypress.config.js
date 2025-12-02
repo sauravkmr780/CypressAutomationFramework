@@ -169,6 +169,32 @@ export default defineConfig({
             console.error('Excel read all sheets error:', error);
             throw error;
           }
+        },
+        
+        // Excel file writing task
+        writeExcel({ filePath, sheetName, data }) {
+          try {
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, worksheet, sheetName || 'Sheet1');
+            XLSX.writeFile(workbook, filePath);
+            return null;
+          } catch (error) {
+            console.error('Excel write error:', error);
+            throw error;
+          }
+        },
+        
+        // Execute shell command
+        exec(command) {
+          const { execSync } = require('child_process');
+          try {
+            execSync(command, { stdio: 'inherit' });
+            return null;
+          } catch (error) {
+            console.error('Command execution error:', error);
+            return null;
+          }
         }
       });
       
